@@ -24,6 +24,7 @@ Sprint 6 ███████████████████████�
 Sprint 7 ████████████████████████████████ Week 7 (Apr 7-11)  ✅ DONE
 Sprint 7.5 ██████████████████████████████ (same day)         ✅ DONE
 Sprint 8 ████████████████████████████████ Week 8 (Apr 14-18) ✅ DONE
+Sprint 9 ████████████████████████████████ Week 9+ (TBD)     🔄 PLANNING
 
 Milestones:
 ├── v0.1.0 Alpha    → End Sprint 1    ✅
@@ -34,7 +35,8 @@ Milestones:
 ├── v1.3.0 Culture  → End Sprint 6    ✅
 ├── v1.4.0 CauDuong → End Sprint 7    ✅
 ├── v1.5.0 Relations→ End Sprint 7.5  ✅
-└── v1.7.0 LocalDev+Security → End Sprint 8 ✅
+├── v1.7.0 LocalDev+Security → End Sprint 8 ✅
+└── v2.0.0 Desktop  → End Sprint 9    🔄 Planning
 ```
 
 ---
@@ -420,7 +422,8 @@ Milestones:
 | **Sprint 7** | Ceremony | Cầu đương rotation + DFS algorithm | ~1,500 | ✅ |
 | **Sprint 7.5** | Relations | Family relations UX + tree filter | ~2,000 | ✅ |
 | **Sprint 8** | LocalDev + Security | Supabase CLI + Docker + RLS hardening + middleware fix | ~1,200 | ✅ |
-| **Total** | | | **~19,700** | **DONE** |
+| **Sprint 9** | Desktop App | Electron + sql.js shim, SQLite DB, 3-platform installer | ~1,800 est. | 🔄 |
+| **Total** | | | **~21,500** | |
 
 ---
 
@@ -460,6 +463,9 @@ Milestones:
 | RLS: profiles protected | | | | | | | | | ✅ | DONE |
 | RLS: contact data private | | | | | | | | | ✅ | DONE |
 | RLS: tables auth-gated | | | | | | | | | ✅ | DONE |
+| Electron shell (Desktop) | | | | | | | | | | S9 |
+| sql.js SQLite shim | | | | | | | | | | S9 |
+| Offline installer (.dmg/.exe) | | | | | | | | | | S9 |
 
 ---
 
@@ -816,8 +822,187 @@ frontend/
 
 ---
 
-**Status:** ✅ Sprints 1-8 Complete (v1.7.0)
+**Status:** ✅ Sprints 1-8 Complete (v1.7.0) | 🔄 Sprint 9 Planning (v2.0.0)
 
-*Updated: 2026-02-26 — Sprint 8 complete: Local Development Mode (Supabase CLI + Docker) + Security Hardening (RLS, middleware, privacy defaults).*
+*Updated: 2026-02-26 — Sprint 8 complete: Local Development Mode (Supabase CLI + Docker) + Security Hardening (RLS, middleware, privacy defaults). Sprint 9 in planning: Standalone Desktop App.*
+
+---
+
+## 🏃 Sprint 9: Standalone Desktop App 🔄
+
+**Dates:** TBD (22–34 days estimated)
+**Goal:** Bản cài đặt "double-click" cho thành viên phi kỹ thuật — không cần Node.js, Docker, Supabase, hay terminal
+**Version:** v2.0.0
+**CTO Review:** ✅ v1 (7 issues resolved) → ✅ v2 Approved with 3 conditions
+
+### Business Context
+
+Target user: Thành viên dòng họ không rành kỹ thuật muốn dùng app mà không cần cài đặt stack dev.
+Approach được chọn: **Electron + sql.js (WASM SQLite) Shim** — zero code change cho 79 data layer functions, offline, single-file DB.
+
+### Architecture: Supabase Client Shim
+
+```
+Web mode:    supabase.from('people').select('*') → PostgREST HTTP → PostgreSQL
+Desktop mode: supabase.from('people').select('*') → /api/desktop-db → sql.js SQLite
+```
+
+Data layer (5 files, 79 functions), hooks (7), pages/components (~40): **KHÔNG ĐỔI**.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Browser (Electron Renderer)                              │
+│   sqlite-supabase-shim.ts → fetch('/api/desktop-db')    │
+└──────────────────────────┬──────────────────────────────┘
+                           │ HTTP (localhost)
+┌──────────────────────────▼──────────────────────────────┐
+│ Next.js Server (Node.js)                                 │
+│   /api/desktop-db/ → query-builder → sql.js             │
+│   /api/media/[...path] → local filesystem               │
+└──────────────────────────┬──────────────────────────────┘
+                           │
+                   ancestortree.db (SQLite)
+```
+
+### Design Limitations (Documented)
+
+- Desktop = **single-user admin** only — no multi-user, no RBAC
+- Middleware server-side role check bypassed in desktop mode (documented, not a bug)
+
+### CTO-Approved Prerequisites (3 conditions before Phase 2)
+
+| # | Condition | Resolution | Status |
+|---|-----------|------------|--------|
+| A | sql.js persistence (in-memory, manual flush) | Singleton `getDatabase()` + `flushToDisk()` after every write + debounced flush + `.bak` before migration | ⏳ Phase 1 |
+| B | Export format base64 won't scale (100MB+) | Switch to **ZIP archive**: `manifest.json` + `media/` folder (archiver + yauzl, pure JS) | ⏳ Phase 3 |
+| C | sql.js WASM loading in Next.js standalone | Verify Phase 1 (task 1.7) + fallback: sqljs-dist (inline WASM) | ⏳ Phase 1 |
+
+### ADRs Required
+
+| ADR | Title | Decision |
+|-----|-------|----------|
+| ADR-001 | SQLite adapter (sql.js vs better-sqlite3) | sql.js + `DbAdapter` interface for later swap |
+| ADR-002 | desktop-db route decomposition | 4 files: route.ts / query-builder.ts / type-coerce.ts / rpc-handlers.ts |
+| ADR-003 | Media export format | ZIP archive (not base64 JSON) |
+| ADR-004 | `output: standalone` conditional | `process.env.ELECTRON_BUILD ? 'standalone' : undefined` |
+
+### Phases
+
+#### Phase 1: Electron Shell + Desktop Mode (2–3 ngày)
+
+| # | Task | File | Status |
+|---|------|------|--------|
+| 1.1 | Electron + sql.js + electron-builder deps | `desktop/package.json` | ⏳ |
+| 1.2 | BrowserWindow, app lifecycle, migration runner | `desktop/electron/main.ts` | ⏳ |
+| 1.3 | Spawn Next.js standalone on random port | `desktop/electron/server.ts` | ⏳ |
+| 1.4 | Minimal context bridge | `desktop/electron/preload.ts` | ⏳ |
+| 1.5 | `output: 'standalone'` conditional | `frontend/next.config.ts` | ⏳ |
+| 1.6 | 3-line desktop bypass | `frontend/src/middleware.ts` | ⏳ |
+| **1.7** | **Verify sql.js WASM loads in standalone** (CTO condition C) | `public/` or `outputFileTracingIncludes` | ⏳ |
+| Gate | Electron launches → shows web app shell | | ⏳ |
+
+#### Phase 2: SQLite Shim — Core (12–18 ngày)
+
+| # | Task | File | Lines | Status |
+|---|------|------|-------|--------|
+| 2.1 | Mock 8 auth methods | `sqlite-auth-shim.ts` | ~80 | ⏳ |
+| 2.2 | Storage → API routes serializer | `sqlite-storage-shim.ts` | ~80 | ⏳ |
+| 2.3 | Client query builder → JSON → fetch | `sqlite-supabase-shim.ts` | ~120 | ⏳ |
+| 2.4 | SQL executor: query-builder + type-coerce + rpc-handlers (ADR-002) | `api/desktop-db/` (4 files) | ~500 | ⏳ |
+| **2.4a** | **Singleton DB + `flushToDisk()` after every write** (CTO condition A) | `api/desktop-db/query-builder.ts` | ~50 | ⏳ |
+| 2.5 | Local file server + path traversal guard | `api/media/[...path]/route.ts` | ~50 | ⏳ |
+| 2.6 | Return shim in desktop mode | `frontend/src/lib/supabase.ts` | ~12 | ⏳ |
+| 2.7 | SQLite schema (13 tables, PG→SQLite types) | `sqlite-migrations/001_initial.sql` | ~200 | ⏳ |
+| 2.8 | Migration runner + `_migrations` table | `desktop/migrations/` | ~50 | ⏳ |
+| 2.9 | Integration tests: all 79 functions vs SQLite | `__tests__/shim-integration.test.ts` | ~300 | ⏳ |
+| Gate | All 79 functions pass, 13 routes working, CRUD + tree + cầu đương | | | ⏳ |
+
+#### Phase 3: Build & Distribution (5–8 ngày)
+
+| # | Task | File | Status |
+|---|------|------|--------|
+| 3.1 | macOS .dmg, Windows .exe (NSIS), Linux .AppImage | `electron-builder.yml` | ⏳ |
+| 3.2 | App icons (3 formats) | `desktop/build/icon.*` | ⏳ |
+| 3.3 | First-run wizard (tên dòng họ, admin, import) | `(main)/setup/page.tsx` | ⏳ |
+| **3.4** | **ZIP export format** (CTO condition B) | Export/Import engine | ⏳ |
+| 3.5 | Code signing: macOS Apple Developer ($99/yr) | electron-builder.yml | ⏳ |
+| 3.6 | Test installers on clean machine: macOS + Windows + Linux | | ⏳ |
+| Gate | Install on clean machine → first-run wizard → full app working | | ⏳ |
+
+#### Phase 4: Polish & Documentation (3–5 ngày)
+
+| # | Task | Status |
+|---|------|--------|
+| 4.1 | Auto-update (electron-updater + GitHub Releases) | ⏳ |
+| 4.2 | Error handling, graceful shutdown, crash recovery | ⏳ |
+| 4.3 | Update SDLC docs (BRD, TDD, Sprint Plan, Roadmap) | ⏳ |
+| 4.4 | User guide tiếng Việt | ⏳ |
+| 4.5 | GitHub Release với binaries (3 platforms) | ⏳ |
+
+### Files Changed
+
+**Modified (3 files):**
+
+| File | Lines changed |
+|------|---------------|
+| `frontend/next.config.ts` | +1 (output: standalone conditional) |
+| `frontend/src/middleware.ts` | +3 (desktop bypass) |
+| `frontend/src/lib/supabase.ts` | +~12 (shim conditional) |
+
+**New Files (~15 files, ~1,800 lines):**
+
+```
+frontend/src/lib/
+  sqlite-supabase-shim.ts     (~120) Client query builder
+  sqlite-auth-shim.ts         (~80)  Mock auth
+  sqlite-storage-shim.ts      (~80)  Storage → API
+frontend/src/app/api/
+  desktop-db/
+    route.ts                  (~80)  HTTP handler
+    query-builder.ts          (~200) SQL builder + DB singleton + flush
+    type-coerce.ts            (~80)  Boolean/JSONB/UUID
+    error-mapper.ts           (~40)  PGRST116 shapes
+    rpc-handlers.ts           (~100) is_person_in_subtree CTE
+  media/[...path]/route.ts    (~50)  Local file server
+frontend/sqlite-migrations/
+  001_initial.sql             (~200) 13 tables SQLite
+frontend/src/app/(main)/setup/page.tsx  (~100) First-run wizard
+frontend/src/lib/__tests__/
+  shim-integration.test.ts    (~300) 79 function coverage
+desktop/
+  electron/main.ts            (~120)
+  electron/server.ts          (~80)
+  electron/preload.ts         (~10)
+  package.json                (~40)
+  tsconfig.json               (~15)
+  electron-builder.yml        (~40)
+  migrations/001_initial.sql + runner (~50)
+docs/02-design/ADR/           ADR-001 ~ ADR-004
+```
+
+**Unchanged:** All 50+ data layer, hooks, pages, components files.
+
+### Acceptance Criteria
+
+- [ ] Double-click installer (.dmg / .exe) installs and opens app
+- [ ] First-run wizard: nhập tên dòng họ + admin → app immediately usable
+- [ ] Tất cả 13 routes hoạt động offline (không có internet)
+- [ ] CRUD people/families/events/achievements/fund/cầu đương hoạt động
+- [ ] Cây gia phả + tìm kiếm hoạt động
+- [ ] Export ZIP → Import vào web instance (data + media intact)
+- [ ] Dữ liệu persist sau restart (`ancestortree.db`)
+- [ ] Migration: install v1 → add data → update v2 → data preserved
+- [ ] `pnpm build` (web mode) vẫn pass
+- [ ] macOS install không có Gatekeeper warning
+
+### Estimate
+
+| Phase | Duration |
+|-------|----------|
+| Phase 1 | 2–3 ngày |
+| Phase 2 | 12–18 ngày |
+| Phase 3 | 5–8 ngày |
+| Phase 4 | 3–5 ngày |
+| **Total** | **22–34 ngày** |
 
 *SDLC Framework 6.1.1 - Stage 04 Build*

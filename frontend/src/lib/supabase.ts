@@ -38,7 +38,8 @@ const supabase = supabaseUrl && supabaseAnonKey
 export { supabase };
 
 // Server-side client with service role (for admin operations)
-export function createServerClient() {
+// Named createServiceRoleClient to avoid confusion with @supabase/ssr's createServerClient
+export function createServiceRoleClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!serviceRoleKey) {
     throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');

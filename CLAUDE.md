@@ -15,7 +15,7 @@ This file provides guidance to AI assistants (Claude, GPT, etc.) when working wi
 **AncestorTree** (Gia Phả Điện Tử) is a digital family tree management system for Chi tộc Đặng Đình, Thạch Lâm, Hà Tĩnh.
 
 - **Repository:** https://github.com/Minh-Tam-Solution/AncestorTree
-- **Current Version:** v1.6.0 (Sprint 8 DONE)
+- **Current Version:** v1.7.0 (Sprint 8 + Security Hardening)
 - **SDLC Tier:** LITE (5 stages)
 - **Tech Stack:** Next.js 16, React 19, Tailwind CSS 4, Supabase
 - **Built with:** [TinySDLC](https://github.com/Minh-Tam-Solution/tinysdlc) + [MTS-SDLC-Lite](https://github.com/Minh-Tam-Solution/MTS-SDLC-Lite)
@@ -125,6 +125,12 @@ AncestorTree/
 │       ├── migrations/             # Timestamped migration files (6)
 │       ├── config.toml             # Supabase CLI config (ports, storage)
 │       └── seed.sql                # Demo data: 18 thành viên 5 đời
+├── desktop/                        # Electron desktop app (Sprint 9)
+│   ├── electron/                   # Main process (main.ts, server.ts, preload.ts)
+│   ├── build/                      # App icons (icns, ico, png)
+│   ├── migrations/                 # SQLite versioned migrations
+│   ├── electron-builder.yml        # Cross-platform build config
+│   └── package.json                # Electron + sql.js deps
 ├── .sdlc-config.json               # SDLC configuration
 ├── CLAUDE.md                       # AI assistant guidelines
 └── README.md                       # Project overview

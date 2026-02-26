@@ -23,6 +23,11 @@ const authRequiredPaths = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Desktop mode: bypass all auth — single-user admin, no Supabase Auth
+  if (process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true') {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
   let response = NextResponse.next({
     request: { headers: request.headers },
   });

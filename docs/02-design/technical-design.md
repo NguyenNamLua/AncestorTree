@@ -2,7 +2,7 @@
 project: AncestorTree
 path: docs/02-design/technical-design.md
 type: design
-version: 1.4.0
+version: 1.5.0
 updated: 2026-02-26
 owner: "@dev-team"
 status: approved
@@ -19,6 +19,7 @@ status: approved
 | 1.2.0   | 2026-02-25 | @architect | Update to match actual implementation (S1-S6)    |
 | 1.3.0   | 2026-02-25 | @architect | Add Cầu đương tables + DFS rotation algorithm (Sprint 7) |
 | 1.4.0   | 2026-02-26 | @architect | Add Local Development Mode — Supabase CLI + Docker (Sprint 8) |
+| 1.5.0   | 2026-02-26 | @architect | Add Desktop App Architecture — Electron + sql.js Shim (Sprint 9 Phase 1) |
 
 ---
 
@@ -1201,6 +1202,58 @@ export interface ChiConfig {
 **Prerequisites:** Docker Desktop (2GB+ RAM), Node.js 18+, pnpm.
 **Setup:** `pnpm local:setup` → auto chạy migrations + seed data.
 **Chi tiết:** Xem [LOCAL-DEVELOPMENT.md](../04-build/LOCAL-DEVELOPMENT.md).
+
+### 10.3 Desktop Mode (Standalone App) (v2.0)
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                    ELECTRON APP                               │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  BrowserWindow (Renderer)                             │    │
+│  │                                                       │    │
+│  │  sqlite-supabase-shim.ts (client-side)               │    │
+│  │    .from('people').select('*').eq('id', x)            │    │
+│  │    → serialize to JSON → fetch('/api/desktop-db')     │    │
+│  └────────────────────────┬──────────────────────────────┘    │
+│                           │ HTTP (localhost)                   │
+│  ┌────────────────────────▼──────────────────────────────┐    │
+│  │  Next.js Standalone Server (Node.js)                   │    │
+│  │                                                        │    │
+│  │  /api/desktop-db/route.ts                             │    │
+│  │    → getDatabase() singleton → build SQL → sql.js     │    │
+│  │    → boolean/JSONB conversion → flushToDisk()         │    │
+│  │    → return {data, error} as JSON                     │    │
+│  │                                                        │    │
+│  │  /api/media/[...path]/route.ts                        │    │
+│  │    → serve local files from ~/AncestorTree/media/     │    │
+│  └────────────────────────┬──────────────────────────────┘    │
+│                           │                                   │
+│                   ┌───────▼───────┐                           │
+│                   │   SQLite DB   │                           │
+│                   │ ancestortree  │                           │
+│                   │   .db (file)  │                           │
+│                   └───────────────┘                           │
+│                                                              │
+│  Data: ~/AncestorTree/data/ancestortree.db                   │
+│  Media: ~/AncestorTree/media/                                │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Key design:** Supabase Client Shim — giả lập Supabase JS API trên SQLite (sql.js WASM):
+
+- **Data layer (5 files, 79 functions): KHÔNG ĐỔI**
+- **Hooks (7 files): KHÔNG ĐỔI**
+- **Pages/Components (~40 files): KHÔNG ĐỔI**
+- **Chỉ modify 3 existing files + thêm ~18 files mới**
+
+**Desktop-specific:**
+
+- `NEXT_PUBLIC_DESKTOP_MODE=true` → middleware bypasses auth, supabase.ts returns shim client
+- `ELECTRON_BUILD=true` → `next.config.ts` sets `output: 'standalone'` (ADR-004)
+- sql.js persistence: singleton `getDatabase()` + `flushToDisk()` atomic write after every mutation
+- Single-user admin mode — no RLS, no auth, no role checks
+- ADRs: [ADR-001](ADR/ADR-001-sqlite-adapter.md), [ADR-002](ADR/ADR-002-desktop-db-decomposition.md), [ADR-003](ADR/ADR-003-media-export-format.md), [ADR-004](ADR/ADR-004-standalone-output-conditional.md)
 
 ---
 

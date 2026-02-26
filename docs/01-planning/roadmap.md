@@ -2,7 +2,7 @@
 project: AncestorTree
 path: docs/01-planning/roadmap.md
 type: planning
-version: 1.4.0
+version: 1.5.0
 updated: 2026-02-26
 owner: "@pm"
 status: approved
@@ -23,6 +23,7 @@ status: approved
 | **Sprint 7.5** | Sáng 25/02/2026 | Family Relations UX + Tree hierarchical + Tree-scoped editor |
 | **Test + Ship** | Chiều–tối 25/02 | QA, code review, hotfix, deploy Vercel, ship to community |
 | **Sprint 8 — Local Dev** | 26/02/2026 | Supabase CLI + Docker local mode, seed data, setup script |
+| **Sprint 9 — Desktop** | 26/02/2026 → | Electron + sql.js standalone app (Phase 1: shell done, Phase 2-5: in progress) |
 
 **Tổng cộng:** ~24 giờ build + 1 ngày polish · 1 người · 8 AI agents · TinySDLC methodology
 
@@ -397,6 +398,19 @@ status: approved
 | Login with demo account | Yes |
 | Demo family tree renders | Yes |
 | Cloud mode unaffected | Yes |
+
+### Sprint 9 — Desktop App
+
+| Metric | Target |
+|--------|--------|
+| Electron launches + BrowserWindow renders | Yes |
+| sql.js WASM loads in standalone mode | Yes |
+| All 79 data layer functions pass vs SQLite shim | Yes |
+| All 13 routes render in desktop mode | Yes |
+| CRUD works on all 13 tables | Yes |
+| Installer works on macOS + Windows + Linux | Yes |
+| Web build (`pnpm build`) unaffected | Yes |
+| Export/import between web ↔ desktop | Yes |
 
 ---
 
