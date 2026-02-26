@@ -2,8 +2,8 @@
 project: AncestorTree
 path: CLAUDE.md
 type: agent-guidelines
-version: 1.5.0
-updated: 2026-02-25
+version: 1.6.0
+updated: 2026-02-26
 ---
 
 # CLAUDE.md
@@ -12,10 +12,10 @@ This file provides guidance to AI assistants (Claude, GPT, etc.) when working wi
 
 ## Project Overview
 
-**AncestorTree** (Gia Pha Dien Tu) is a digital family tree management system for Chi toc Dang Dinh, Thach Lam, Ha Tinh.
+**AncestorTree** (Gia Phả Điện Tử) is a digital family tree management system for Chi tộc Đặng Đình, Thạch Lâm, Hà Tĩnh.
 
 - **Repository:** https://github.com/Minh-Tam-Solution/AncestorTree
-- **Current Version:** v1.6.0 (Sprint 8 in progress)
+- **Current Version:** v1.6.0 (Sprint 8 DONE)
 - **SDLC Tier:** LITE (5 stages)
 - **Tech Stack:** Next.js 16, React 19, Tailwind CSS 4, Supabase
 - **Built with:** [TinySDLC](https://github.com/Minh-Tam-Solution/tinysdlc) + [MTS-SDLC-Lite](https://github.com/Minh-Tam-Solution/MTS-SDLC-Lite)
@@ -80,24 +80,24 @@ AncestorTree/
 │   ├── src/app/                    # App router (route groups)
 │   │   ├── (auth)/                 # Auth pages (login, register, forgot-password, reset-password)
 │   │   └── (main)/                 # Main app with sidebar
-│   │       ├── achievements/       # Vinh danh (Sprint 6)
-│   │       ├── cau-duong/          # Lich Cau duong (Sprint 7)
-│   │       ├── charter/            # Huong uoc (Sprint 6)
-│   │       ├── contributions/      # Dong gop (Sprint 4)
-│   │       ├── directory/          # Thu muc thanh vien (Sprint 4)
-│   │       ├── documents/book/     # Gia pha sach (Sprint 5)
-│   │       ├── events/             # Lich su kien (Sprint 4)
-│   │       ├── fund/               # Quy khuyen hoc (Sprint 6)
-│   │       ├── people/             # Quan ly thanh vien
-│   │       ├── tree/               # Cay gia pha
+│   │       ├── achievements/       # Vinh danh thành tích (Sprint 6)
+│   │       ├── cau-duong/          # Lịch Cầu đường (Sprint 7)
+│   │       ├── charter/            # Hương ước (Sprint 6)
+│   │       ├── contributions/      # Đóng góp (Sprint 4)
+│   │       ├── directory/          # Thư mục thành viên (Sprint 4)
+│   │       ├── documents/book/     # Gia phả sách (Sprint 5)
+│   │       ├── events/             # Lịch sự kiện (Sprint 4)
+│   │       ├── fund/               # Quỹ khuyến học (Sprint 6)
+│   │       ├── people/             # Quản lý thành viên
+│   │       ├── tree/               # Cây gia phả
 │   │       └── admin/              # Admin panel
 │   │           ├── achievements/   # QL Vinh danh (Sprint 6)
-│   │           ├── cau-duong/      # QL Cau duong (Sprint 7)
-│   │           ├── charter/        # QL Huong uoc (Sprint 6)
-│   │           ├── contributions/  # QL Dong gop (Sprint 4)
-│   │           ├── fund/           # QL Quy & Hoc bong (Sprint 6)
-│   │           ├── settings/       # Cai dat
-│   │           └── users/          # QL Nguoi dung
+│   │           ├── cau-duong/      # QL Cầu đường (Sprint 7)
+│   │           ├── charter/        # QL Hương ước (Sprint 6)
+│   │           ├── contributions/  # QL Đóng góp (Sprint 4)
+│   │           ├── fund/           # QL Quỹ & Học bổng (Sprint 6)
+│   │           ├── settings/       # Cài đặt
+│   │           └── users/          # QL Người dùng
 │   ├── src/components/             # React components
 │   │   ├── ui/                     # shadcn/ui components
 │   │   ├── layout/                 # Layout components (sidebar, header)
@@ -105,7 +105,7 @@ AncestorTree/
 │   │   └── people/                 # People components (person-form, family-relations-card)
 │   ├── src/hooks/                  # Custom React hooks
 │   │   ├── use-achievements.ts     # Achievement CRUD hooks (Sprint 6)
-│   │   ├── use-cau-duong.ts        # Cau duong rotation hooks (Sprint 7)
+│   │   ├── use-cau-duong.ts        # Cầu đường rotation hooks (Sprint 7)
 │   │   ├── use-clan-articles.ts    # Charter CRUD hooks (Sprint 6)
 │   │   ├── use-contributions.ts    # Contribution hooks (Sprint 4)
 │   │   ├── use-events.ts           # Event hooks (Sprint 4)
@@ -115,16 +115,16 @@ AncestorTree/
 │   │   ├── supabase.ts             # Supabase client init
 │   │   ├── supabase-data.ts        # Core data layer (people, families)
 │   │   ├── supabase-data-achievements.ts  # Achievement data (Sprint 6)
-│   │   ├── supabase-data-cau-duong.ts     # Cau duong + DFS algorithm (Sprint 7)
+│   │   ├── supabase-data-cau-duong.ts     # Cầu đường + DFS algorithm (Sprint 7)
 │   │   ├── supabase-data-charter.ts       # Charter data (Sprint 6)
 │   │   ├── supabase-data-fund.ts          # Fund & scholarship data (Sprint 6)
 │   │   └── lunar-calendar.ts       # Lunar-solar conversion (Sprint 4)
 │   ├── src/types/                  # TypeScript types
 │   │   └── index.ts                # All type definitions
 │   └── supabase/                   # Database migrations
-│       ├── database-setup.sql      # Core tables (7): people, families, children, profiles, contributions, events, media
-│       ├── sprint6-migration.sql   # v1.3 tables (4): achievements, fund_transactions, scholarships, clan_articles
-│       └── cau-duong-migration.sql # v1.4 tables (2): cau_duong_pools, cau_duong_assignments
+│       ├── migrations/             # Timestamped migration files (5)
+│       ├── config.toml             # Supabase CLI config (ports, storage)
+│       └── seed.sql                # Demo data: 18 thành viên 5 đời
 ├── .sdlc-config.json               # SDLC configuration
 ├── CLAUDE.md                       # AI assistant guidelines
 └── README.md                       # Project overview
@@ -226,9 +226,10 @@ chore/upgrade-deps
 | Business Requirements | `docs/01-planning/BRD.md` |
 | Technical Design | `docs/02-design/technical-design.md` |
 | UI/UX Design | `docs/02-design/ui-ux-design.md` |
-| Core DB Schema | `frontend/supabase/database-setup.sql` |
-| Sprint 6 Migration | `frontend/supabase/sprint6-migration.sql` |
-| Sprint 7 Migration | `frontend/supabase/cau-duong-migration.sql` |
+| Core DB Schema | `frontend/supabase/migrations/20260224000000_database_setup.sql` |
+| Sprint 6 Migration | `frontend/supabase/migrations/20260224000001_sprint6_migration.sql` |
+| Sprint 7 Migration | `frontend/supabase/migrations/20260224000002_cau_duong_migration.sql` |
+| Local Dev Guide | `docs/04-build/LOCAL-DEVELOPMENT.md` |
 | Sprint Plan | `docs/04-build/SPRINT-PLAN.md` |
 | Test Plan | `docs/05-test/TEST-PLAN.md` |
 | Community Launch | `docs/00-foundation/06-Community/Community-Launch-Strategy.md` |
