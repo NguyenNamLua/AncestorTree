@@ -2,8 +2,8 @@
 project: AncestorTree
 path: docs/01-planning/BRD.md
 type: planning
-version: 1.3.0
-updated: 2026-02-25
+version: 1.4.0
+updated: 2026-02-26
 owner: "@pm"
 status: approved
 ---
@@ -18,6 +18,7 @@ status: approved
 | 1.1.0 | 2026-02-25 | @pm | Add Vinh danh, Quỹ khuyến học, Hương ước |
 | 1.2.0 | 2026-02-25 | @pm | Add Lịch Cầu đương — phân công xoay vòng chủ lễ |
 | 1.3.0 | 2026-02-25 | @pm | Sprint 7.5 — Family Relations UX, Tree hierarchical layout, Branch filter, Tree-scoped editor (FR-507~510) |
+| 1.4.0 | 2026-02-26 | @pm | Sprint 8 — Local Development Mode (NFR-18~20, updated Integration Requirements) |
 
 ---
 
@@ -249,6 +250,14 @@ status: approved
 | **NFR-16** | Backup | Daily | Supabase |
 | **NFR-17** | Recovery | <4 hours | Manual restore |
 
+### 4.6 Local Development (v1.5)
+
+| ID | Requirement | Target | Notes |
+|----|-------------|--------|-------|
+| **NFR-18** | Chạy offline không cần tài khoản cloud | 1 lệnh setup (sau khi có Docker) | Docker + Supabase CLI |
+| **NFR-19** | Zero code change giữa local và cloud mode | Chỉ thay env vars | Không sửa data layer, hooks, components |
+| **NFR-20** | Demo data sẵn sàng khi cài local | Seed 15-20 thành viên | Admin account + sample family tree |
+
 ---
 
 ## 5. Data Requirements
@@ -319,8 +328,9 @@ status: approved
 
 | System | Integration | Priority |
 |--------|-------------|----------|
-| **Supabase** | Auth, Database | P0 |
-| **Vercel** | Hosting | P0 |
+| **Supabase Cloud** | Auth, Database, Storage (production) | P0 |
+| **Supabase CLI** | Local development — Docker containers (v1.5) | P1 |
+| **Vercel** | Hosting (production) | P0 |
 | **GEDCOM** | Import/Export (v2.0) | P2 |
 
 ### 6.2 APIs
@@ -329,6 +339,16 @@ status: approved
 |-----|---------|----------|
 | **Supabase REST** | CRUD operations | P0 |
 | **Supabase Auth** | User management | P0 |
+
+### 6.3 Local Development Mode (v1.5)
+
+Cho phép chạy toàn bộ ứng dụng trên máy cá nhân mà không cần tài khoản Supabase/Vercel:
+
+- **Supabase CLI + Docker:** PostgreSQL, GoTrue Auth, PostgREST, Storage chạy local
+- **Migrations:** Tự động chạy khi `supabase start` (thư mục `supabase/migrations/`)
+- **Seed data:** Demo family tree + admin account (`admin@giapha.local` / `admin123`)
+- **Zero code change:** Chỉ thay đổi env vars (`NEXT_PUBLIC_SUPABASE_URL` → `http://127.0.0.1:54321`)
+- **Prerequisites:** Docker Desktop (2GB+ RAM), Node.js 18+, pnpm
 
 ---
 
@@ -350,7 +370,7 @@ status: approved
 | **A-01** | HĐGT provides data | Project blocked |
 | **A-02** | Free tier sufficient | Need upgrade |
 | **A-03** | Users have smartphone | Low adoption |
-| **A-04** | Internet available | Offline not supported |
+| **A-04** | Internet available (cloud mode) | Local mode hỗ trợ offline |
 
 ---
 

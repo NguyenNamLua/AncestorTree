@@ -2,8 +2,8 @@
 project: AncestorTree
 path: docs/04-build/SPRINT-PLAN.md
 type: build
-version: 1.4.0
-updated: 2026-02-25
+version: 1.5.0
+updated: 2026-02-26
 owner: "@pm"
 status: approved
 ---
@@ -21,16 +21,20 @@ Sprint 3 ███████████████████████�
 Sprint 4 ████████████████████████████████ Week 4 (Mar 17-21) ✅ DONE
 Sprint 5 ████████████████████████████████ Week 5 (Mar 24-28) ✅ DONE
 Sprint 6 ████████████████████████████████ Week 6 (Mar 31-Apr 4) ✅ DONE
-Sprint 7 ████████████████████████████████ Week 7 (Apr 7-11) 🔄 IN PROGRESS
+Sprint 7 ████████████████████████████████ Week 7 (Apr 7-11)  ✅ DONE
+Sprint 7.5 ██████████████████████████████ (same day)         ✅ DONE
+Sprint 8 ████████████████████████████████ Week 8 (Apr 14-18) 🔄 IN PROGRESS
 
 Milestones:
-├── v0.1.0 Alpha    → End Sprint 1  ✅
-├── v0.5.0 Beta     → End Sprint 2  ✅
-├── v1.0.0 MVP      → End Sprint 3  ✅
-├── v1.1.0 Enhanced → End Sprint 4  ✅
-├── v1.2.0 Release  → End Sprint 5  ✅
-├── v1.3.0 Culture  → End Sprint 6  ✅
-└── v1.4.0 CauDuong → End Sprint 7  🔄
+├── v0.1.0 Alpha    → End Sprint 1    ✅
+├── v0.5.0 Beta     → End Sprint 2    ✅
+├── v1.0.0 MVP      → End Sprint 3    ✅
+├── v1.1.0 Enhanced → End Sprint 4    ✅
+├── v1.2.0 Release  → End Sprint 5    ✅
+├── v1.3.0 Culture  → End Sprint 6    ✅
+├── v1.4.0 CauDuong → End Sprint 7    ✅
+├── v1.5.0 Relations→ End Sprint 7.5  ✅
+└── v1.6.0 LocalDev → End Sprint 8    🔄
 ```
 
 ---
@@ -413,37 +417,45 @@ Milestones:
 | **Sprint 4** | Enhanced | Directory, Calendar, Contributions | ~2,500 | ✅ |
 | **Sprint 5** | Polish | GEDCOM, Book, Photos, Release | ~2,000 | ✅ |
 | **Sprint 6** | Culture | Honors, Fund, Scholarships, Charter | ~3,000 | ✅ |
-| **Total** | | | **~15,000** | **DONE** |
+| **Sprint 7** | Ceremony | Cầu đương rotation + DFS algorithm | ~1,500 | ✅ |
+| **Sprint 7.5** | Relations | Family relations UX + tree filter | ~2,000 | ✅ |
+| **Sprint 8** | Local Dev | Supabase CLI + Docker, seed, setup | ~500 | 🔄 |
+| **Total** | | | **~19,000** | |
 
 ---
 
 ## 📋 Feature Completion Matrix
 
-| Feature | S1 | S2 | S3 | S4 | S5 | S6 | Status |
-|---------|:--:|:--:|:--:|:--:|:--:|:--:|:------:|
-| Project Setup | ✅ | | | | | | DONE |
-| Database Schema | ✅ | | | | | | DONE |
-| Auth (Login/Register) | ✅ | | | | | | DONE |
-| Layout & Navigation | ✅ | | | | | | DONE |
-| People CRUD | | ✅ | | | | | DONE |
-| Family Relationships | | ✅ | | | | | DONE |
-| Search & Filter | | ✅ | | | | | DONE |
-| Basic Tree View | | ✅ | | | | | DONE |
-| Interactive Tree | | | ✅ | | | | DONE |
-| Admin Panel | | | ✅ | | | | DONE |
-| Homepage & Stats | | | ✅ | | | | DONE |
-| Directory | | | | ✅ | | | DONE |
-| Memorial Calendar | | | | ✅ | | | DONE |
-| Lunar Calendar | | | | ✅ | | | DONE |
-| Contributions | | | | ✅ | | | DONE |
-| GEDCOM Export | | | | | ✅ | | DONE |
-| Book Generator | | | | | ✅ | | DONE |
-| Photo Upload | | | | | ✅ | | DONE |
-| Error Boundaries | | | | | ✅ | | DONE |
-| Achievement Honors | | | | | | ✅ | DONE |
-| Education Fund | | | | | | ✅ | DONE |
-| Scholarships & Rewards | | | | | | ✅ | DONE |
-| Family Charter | | | | | | ✅ | DONE |
+| Feature | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S7.5 | S8 | Status |
+|---------|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|:--:|:------:|
+| Project Setup | ✅ | | | | | | | | | DONE |
+| Database Schema | ✅ | | | | | | | | | DONE |
+| Auth (Login/Register) | ✅ | | | | | | | | | DONE |
+| Layout & Navigation | ✅ | | | | | | | | | DONE |
+| People CRUD | | ✅ | | | | | | | | DONE |
+| Family Relationships | | ✅ | | | | | | | | DONE |
+| Search & Filter | | ✅ | | | | | | | | DONE |
+| Basic Tree View | | ✅ | | | | | | | | DONE |
+| Interactive Tree | | | ✅ | | | | | | | DONE |
+| Admin Panel | | | ✅ | | | | | | | DONE |
+| Homepage & Stats | | | ✅ | | | | | | | DONE |
+| Directory | | | | ✅ | | | | | | DONE |
+| Memorial Calendar | | | | ✅ | | | | | | DONE |
+| Lunar Calendar | | | | ✅ | | | | | | DONE |
+| Contributions | | | | ✅ | | | | | | DONE |
+| GEDCOM Export | | | | | ✅ | | | | | DONE |
+| Book Generator | | | | | ✅ | | | | | DONE |
+| Photo Upload | | | | | ✅ | | | | | DONE |
+| Error Boundaries | | | | | ✅ | | | | | DONE |
+| Achievement Honors | | | | | | ✅ | | | | DONE |
+| Education Fund | | | | | | ✅ | | | | DONE |
+| Scholarships & Rewards | | | | | | ✅ | | | | DONE |
+| Family Charter | | | | | | ✅ | | | | DONE |
+| Cầu đương (rotation+DFS) | | | | | | | ✅ | | | DONE |
+| FamilyRelationsCard | | | | | | | | ✅ | | DONE |
+| Tree hierarchical layout | | | | | | | | ✅ | | DONE |
+| Tree-scoped editor | | | | | | | | ✅ | | DONE |
+| Local dev (Supabase CLI) | | | | | | | | | 🔄 | IN PROGRESS |
 
 ---
 
@@ -468,12 +480,20 @@ Milestones:
 | S6 | Fund | ✅ Dashboard with balance | PASS |
 | S6 | Charter | ✅ Articles with categories | PASS |
 | S6 | Build | ✅ pnpm build passes | PASS |
+| S7 | DB migration | ✅ cau-duong-migration.sql applies cleanly | PASS |
+| S7 | DFS algorithm | ✅ Correct preorder traversal | PASS |
+| S7 | Public schedule | ✅ 4 ceremonies/year with status badges | PASS |
+| S7 | Admin panel | ✅ Pool + assignment + delegation management | PASS |
+| S7.5 | FamilyRelationsCard | ✅ Parents/siblings/spouses/children | PASS |
+| S7.5 | Tree hierarchical layout | ✅ Bottom-up subtree width algorithm | PASS |
+| S7.5 | Tree branch filter | ✅ ?root= URL parameter working | PASS |
+| S7.5 | Tree-scoped editor | ✅ RLS + admin UI complete | PASS |
 
 ### Final Release
 
 | Metric | Target | Result |
 |--------|--------|--------|
-| **Features complete** | 100% of MVP + v1.3 | ✅ DONE |
+| **Features complete** | 100% of MVP + v1.5 | ✅ DONE |
 | **Bugs** | 0 critical, <5 minor | ✅ 0 critical |
 | **Mobile** | 100% responsive | ✅ DONE |
 | **Build** | pnpm build + lint clean | ✅ PASS |
@@ -595,7 +615,7 @@ Rotation logic:
 | **Day 1: Database + Types** | | | | |
 | | Tạo `cau-duong-migration.sql` (tables + RLS) | 2h | @fullstack | ✅ |
 | | Thêm types vào `src/types/index.ts` | 1h | @fullstack | ✅ |
-| | Run migration trên Supabase | 0.5h | @fullstack | ⏳ |
+| | Run migration trên Supabase | 0.5h | @fullstack | ✅ |
 | **Day 2: Data Layer + Hooks** | | | | |
 | | Tạo `src/lib/supabase-data-cau-duong.ts` | 3h | @fullstack | ✅ |
 | | Implement DFS algorithm (`buildDFSOrder`) | 1h | @fullstack | ✅ |
@@ -604,32 +624,32 @@ Rotation logic:
 | | Tạo `/cau-duong/page.tsx` — xem lịch phân công | 2h | @fullstack | ✅ |
 | | Tab 1: Lịch phân công năm (4 lễ, có status badge) | 1h | @fullstack | ✅ |
 | | Tab 2: Danh sách thành viên đủ điều kiện (DFS order) | 1h | @fullstack | ✅ |
-| | Thêm error.tsx + loading.tsx | 0.5h | @fullstack | ⏳ |
+| | Thêm error.tsx + loading.tsx | 0.5h | @fullstack | ✅ |
 | **Day 4: Admin Panel** | | | | |
-| | Tạo `/admin/cau-duong/page.tsx` | 3h | @fullstack | ⏳ |
-| | Form tạo/sửa pool (tổ tông, đời, tuổi) | 1h | @fullstack | ⏳ |
-| | Nút phân công tự động + manual assign | 1h | @fullstack | ⏳ |
-| | Xử lý ủy quyền (delegation form) | 1h | @fullstack | ⏳ |
-| | Xử lý đổi ngày (reschedule form) | 0.5h | @fullstack | ⏳ |
-| | Ghi nhận hoàn thành (mark complete) | 0.5h | @fullstack | ⏳ |
+| | Tạo `/admin/cau-duong/page.tsx` | 3h | @fullstack | ✅ |
+| | Form tạo/sửa pool (tổ tông, đời, tuổi) | 1h | @fullstack | ✅ |
+| | Nút phân công tự động + manual assign | 1h | @fullstack | ✅ |
+| | Xử lý ủy quyền (delegation form) | 1h | @fullstack | ✅ |
+| | Xử lý đổi ngày (reschedule form) | 0.5h | @fullstack | ✅ |
+| | Ghi nhận hoàn thành (mark complete) | 0.5h | @fullstack | ✅ |
 | **Day 5: Navigation + Docs** | | | | |
-| | Thêm "Cầu đương" vào sidebar navigation | 0.5h | @fullstack | ⏳ |
-| | Update `docs/02-design/technical-design.md` | 1h | @pm | ⏳ |
-| | Update `CLAUDE.md` với Sprint 7 info | 0.5h | @pm | ⏳ |
-| | Verify build passes (`pnpm build`) | 1h | @fullstack | ⏳ |
+| | Thêm "Cầu đương" vào sidebar navigation | 0.5h | @fullstack | ✅ |
+| | Update `docs/02-design/technical-design.md` | 1h | @pm | ✅ |
+| | Update `CLAUDE.md` với Sprint 7 info | 0.5h | @pm | ✅ |
+| | Verify build passes (`pnpm build`) | 1h | @fullstack | ✅ |
 
 ### Acceptance Criteria
 
 | ID | Criteria | Status |
 |----|----------|--------|
-| AC-S7-01 | Admin có thể tạo nhóm Cầu đương với cấu hình đời/tuổi | ⏳ |
-| AC-S7-02 | Hệ thống tính đúng danh sách đủ điều kiện theo tuổi âm | ⏳ |
-| AC-S7-03 | Thứ tự danh sách đúng theo DFS preorder cây gia phả | ⏳ |
-| AC-S7-04 | Admin phân công tự động chọn người tiếp theo trong vòng xoay | ⏳ |
-| AC-S7-05 | Viewer xem được lịch phân công 4 lễ/năm với status | ⏳ |
-| AC-S7-06 | Ủy quyền: ghi nhận người ủy quyền + người thực hiện + lý do | ⏳ |
-| AC-S7-07 | Đổi ngày: cập nhật actual_date, lý do, status=rescheduled | ⏳ |
-| AC-S7-08 | Vòng xoay tự động reset sau khi hết 1 chu kỳ | ⏳ |
+| AC-S7-01 | Admin có thể tạo nhóm Cầu đương với cấu hình đời/tuổi | ✅ |
+| AC-S7-02 | Hệ thống tính đúng danh sách đủ điều kiện theo tuổi âm | ✅ |
+| AC-S7-03 | Thứ tự danh sách đúng theo DFS preorder cây gia phả | ✅ |
+| AC-S7-04 | Admin phân công tự động chọn người tiếp theo trong vòng xoay | ✅ |
+| AC-S7-05 | Viewer xem được lịch phân công 4 lễ/năm với status | ✅ |
+| AC-S7-06 | Ủy quyền: ghi nhận người ủy quyền + người thực hiện + lý do | ✅ |
+| AC-S7-07 | Đổi ngày: cập nhật actual_date, lý do, status=rescheduled | ✅ |
+| AC-S7-08 | Vòng xoay tự động reset sau khi hết 1 chu kỳ | ✅ |
 
 ### File Structure
 
@@ -647,13 +667,13 @@ frontend/
 │   └── app/(main)/
 │       ├── cau-duong/
 │       │   ├── page.tsx          ✅ Created
-│       │   ├── error.tsx         ⏳ Pending
-│       │   └── loading.tsx       ⏳ Pending
+│   │   ├── error.tsx         ✅ Created
+│   │   └── loading.tsx       ✅ Created
 │       └── admin/
 │           └── cau-duong/
-│               └── page.tsx      ⏳ Pending
+│               └── page.tsx      ✅ Created
 └── src/components/layout/
-    └── app-sidebar.tsx           ⏳ Pending (add nav item)
+    └── app-sidebar.tsx           ✅ Updated (nav item added)
 ```
 
 ### Dependencies
@@ -664,8 +684,105 @@ frontend/
 
 ---
 
-**Status:** ✅ Sprints 1-6 Complete (v1.3.0) | 🔄 Sprint 7 In Progress (v1.4.0)
+---
 
-*Updated: 2026-02-25 — Added Sprint 7: Lịch Cầu đương ceremony rotation schedule.*
+## 🏃 Sprint 7.5: Family Relations UX ✅
+
+**Dates:** Feb 25, 2026 (same day as Sprint 7)
+**Goal:** Cải thiện UX quan hệ gia đình + Tree layout phân nhánh + Tree-scoped editor
+
+### Tasks
+
+| # | Task | Hours | Status |
+|---|------|:-----:|:------:|
+| 1 | `PersonRelations` interface + `getPersonRelations()` data layer | 1h | ✅ |
+| 2 | `usePersonRelations()` + family mutation hooks | 1h | ✅ |
+| 3 | `FamilyRelationsCard` component (parents/siblings/spouses/children + AddRelationDialog) | 2h | ✅ |
+| 4 | Parent selection on `/people/new` (PersonCombobox for Cha/Mẹ) | 1h | ✅ |
+| 5 | Hierarchical tree layout engine (bottom-up subtree width → top-down X assignment) | 2h | ✅ |
+| 6 | Branch filter `?root=<id>` URL state + DFS from root | 1h | ✅ |
+| 7 | Tree-scoped editor: `edit_root_person_id` + `is_person_in_subtree()` RLS (FR-507~510) | 2h | ✅ |
+| 8 | Admin UI: TreeMappingDialog (linked_person + edit scope) | 1h | ✅ |
+
+### Deliverables
+
+- ✅ `/people/[id]` — FamilyRelationsCard with add relation dialog
+- ✅ `/people/new` — Parent selection (auto-fill generation)
+- ✅ `/tree` — Hierarchical layout + branch filter + `?root=` URL
+- ✅ `/admin/users` — Tree mapping dialog (linked_person, edit_root)
+- ✅ `sprint75-migration.sql` — `is_person_in_subtree()` + RLS policies
+
+---
+
+## 🏃 Sprint 8: Local Development Mode 🔄
+
+**Dates:** Feb 26, 2026
+**Goal:** Cho phép cộng đồng chạy app local mà không cần tài khoản Supabase/Vercel
+
+### Business Context
+
+Nhiều thành viên dòng họ không rành kỹ thuật, không muốn đăng ký dịch vụ cloud.
+Supabase CLI + Docker cho phép chạy **toàn bộ stack offline** với zero code change.
+
+### Prerequisites
+
+- Docker Desktop (2GB+ RAM)
+- Node.js 18+, pnpm
+- Sprints 1-7.5 complete (all migrations ready)
+
+### Tasks
+
+| # | Task | Hours | Status |
+|---|------|:-----:|:------:|
+| 1 | Create `supabase/config.toml` (ports, auth, storage bucket) | 0.5h | ⏳ |
+| 2 | Move SQL files to `supabase/migrations/` (timestamped, single source of truth) | 0.5h | ⏳ |
+| 3 | Fix `handle_new_user()` trigger — add `SET search_path = public` | 0.5h | ⏳ |
+| 4 | Create `supabase/seed.sql` (demo family tree + auth users with bcrypt + auth.identities) | 1.5h | ⏳ |
+| 5 | Create `scripts/local-setup.mjs` (cross-platform Node.js setup script) | 1h | ⏳ |
+| 6 | Update `package.json` (`local:setup/start/stop/reset` scripts) | 0.25h | ⏳ |
+| 7 | Update `.env.local.example` (local-first defaults) | 0.25h | ⏳ |
+| 8 | Create `docs/04-build/LOCAL-DEVELOPMENT.md` (detailed guide) | 1h | ⏳ |
+| 9 | Update `README.md` + `CLAUDE.md` | 0.5h | ⏳ |
+| 10 | End-to-end test: `supabase start` → `pnpm dev` → login → browse | 0.5h | ⏳ |
+
+### Acceptance Criteria
+
+- [ ] `pnpm local:setup` khởi chạy Docker containers + tạo `.env.local`
+- [ ] `pnpm dev` → login `admin@giapha.local` / `admin123` thành công
+- [ ] Cây gia phả hiển thị 15-20 thành viên demo
+- [ ] Tạo sự kiện, search thành viên, CRUD hoạt động bình thường
+- [ ] Supabase Studio (`http://localhost:54323`) truy cập được
+- [ ] `supabase db reset` xoá sạch + seed lại thành công
+- [ ] `pnpm build` vẫn pass (cloud mode không ảnh hưởng)
+
+### File Structure
+
+```text
+frontend/
+├── supabase/
+│   ├── config.toml                              ✅ NEW
+│   ├── seed.sql                                 ✅ NEW
+│   └── migrations/
+│       ├── 20260224000000_database_setup.sql    ✅ Moved
+│       ├── 20260224000001_sprint6_migration.sql ✅ Moved
+│       ├── 20260224000002_cau_duong_migration.sql ✅ Moved
+│       ├── 20260224000003_sprint75_migration.sql  ✅ Moved
+│       └── 20260224000004_storage_setup.sql     ✅ Moved
+├── scripts/
+│   └── local-setup.mjs                          ✅ NEW
+├── package.json                                 ✅ Modified
+└── .env.local.example                           ✅ Modified
+```
+
+### Dependencies
+
+- Requires: Docker Desktop running
+- Requires: All migrations from Sprint 1-7.5
+
+---
+
+**Status:** ✅ Sprints 1-7.5 Complete (v1.5.0) | 🔄 Sprint 8 In Progress (v1.6.0)
+
+*Updated: 2026-02-26 — Added Sprint 7.5 + Sprint 8: Local Development Mode.*
 
 *SDLC Framework 6.1.1 - Stage 04 Build*

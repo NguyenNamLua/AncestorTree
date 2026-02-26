@@ -2,13 +2,33 @@
 project: AncestorTree
 path: docs/01-planning/roadmap.md
 type: planning
-version: 1.1.0
-updated: 2026-02-25
+version: 1.3.0
+updated: 2026-02-26
 owner: "@pm"
 status: approved
 ---
 
 # Project Roadmap
+
+## 0. What Actually Happened
+
+> **Planned:** 7 sprints over 6 weeks (Feb 24 – Apr 4, 2026)
+> **Actual: 7.5 sprints in 1 day.**
+
+| Phase | When | What |
+| --- | --- | --- |
+| **MVP (Sprint 1–3)** | Tối 24/02/2026 | Foundation + Auth + People CRUD + Interactive Tree + Deploy |
+| **Enhanced (Sprint 4–6)** | Đêm 24/02/2026 | Directory + Lunar Calendar + Contributions + Culture modules |
+| **Sprint 7 — Cầu đương** | Rạng sáng 25/02 | Lịch cúng lễ xoay vòng, thuật toán DFS |
+| **Sprint 7.5** | Sáng 25/02/2026 | Family Relations UX + Tree hierarchical + Tree-scoped editor |
+| **Test + Ship** | Chiều–tối 25/02 | QA, code review, hotfix, deploy Vercel, ship to community |
+| **Sprint 8 — Local Dev** | 26/02/2026 | Supabase CLI + Docker local mode, seed data, setup script |
+
+**Tổng cộng:** ~24 giờ build + 1 ngày polish · 1 người · 8 AI agents · TinySDLC methodology
+
+> Phần bên dưới là kế hoạch ban đầu — giữ lại như tài liệu tham khảo (planned vs actual).
+
+---
 
 ## 1. Release Overview
 
@@ -141,6 +161,69 @@ status: approved
 - [ ] Admin can manage all new content
 
 > **Note:** Detailed Sprint 4-6 task breakdown available in [SPRINT-PLAN.md](../04-build/SPRINT-PLAN.md)
+
+---
+
+### v1.4.0 - Ceremony (Sprint 7)
+
+**Target:** Feb 25, 2026 (actual)
+**Goal:** Lịch Cầu đương — phân công xoay vòng chủ lễ
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **Cầu đương DB** | Tables: cau_duong_pools, cau_duong_assignments + RLS | P1 |
+| **DFS Algorithm** | `buildDFSOrder` — trật tự xoay vòng theo cây gia phả | P1 |
+| **Public View** | Lịch phân công 4 lễ/năm với status badge | P1 |
+| **Admin Panel** | Tạo pool, phân công tự động, ủy quyền, đổi ngày | P1 |
+
+**Exit Criteria:**
+- [ ] Admin tạo được nhóm Cầu đương với cấu hình đời/tuổi
+- [ ] Danh sách thành viên đúng theo DFS preorder
+- [ ] Viewer xem lịch phân công 4 lễ/năm
+- [ ] Ủy quyền + đổi ngày hoạt động
+
+---
+
+### v1.5.0 - Relations (Sprint 7.5)
+
+**Target:** Feb 25, 2026 (actual, same day as Sprint 7)
+**Goal:** Cải thiện UX quan hệ gia đình + Tree layout phân nhánh + Tree-scoped editor
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **FamilyRelationsCard** | Hiển thị bố/mẹ/anh-chị-em/vợ-chồng/con + AddRelationDialog | P1 |
+| **Tree hierarchical layout** | Bottom-up subtree width → top-down X assignment | P1 |
+| **Branch filter** | `?root=<id>` URL state + DFS from root | P1 |
+| **Tree-scoped editor** | `edit_root_person_id` + `is_person_in_subtree()` RLS | P1 |
+| **Admin UI** | TreeMappingDialog (linked_person + edit scope) | P1 |
+
+**Exit Criteria:**
+- [ ] `/people/[id]` hiển thị FamilyRelationsCard với add relation dialog
+- [ ] `/people/new` chọn được bố/mẹ (auto-fill generation)
+- [ ] `/tree` hiển thị hierarchical layout + lọc theo nhánh
+- [ ] `/admin/users` TreeMappingDialog hoạt động
+- [ ] `sprint75-migration.sql` deployed sạch
+
+---
+
+### v1.6.0 - Local Development (Sprint 8)
+
+**Target:** Feb 26, 2026
+**Goal:** Chạy app offline không cần tài khoản Supabase/Vercel
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **Supabase CLI** | config.toml + migrations + seed.sql | P1 |
+| **Setup Script** | `scripts/local-setup.mjs` (cross-platform Node.js) | P1 |
+| **Demo Data** | 15-20 thành viên, 4-5 đời, admin account | P1 |
+| **Documentation** | LOCAL-DEVELOPMENT.md + README update | P1 |
+
+**Exit Criteria:**
+
+- [ ] `pnpm local:setup` khởi chạy Docker containers + tạo `.env.local`
+- [ ] Login `admin@giapha.local` / `admin123` thành công
+- [ ] Demo family tree hiển thị đúng
+- [ ] `pnpm build` vẫn pass (cloud mode không ảnh hưởng)
 
 ---
 
@@ -305,6 +388,15 @@ status: approved
 | Fund dashboard with balance | Yes |
 | Charter articles with tabs | Yes |
 | pnpm build passes | Yes |
+
+### Sprint 8
+
+| Metric | Target |
+|--------|--------|
+| `pnpm local:setup` works | Yes |
+| Login with demo account | Yes |
+| Demo family tree renders | Yes |
+| Cloud mode unaffected | Yes |
 
 ---
 
