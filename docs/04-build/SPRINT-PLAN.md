@@ -914,8 +914,8 @@ Data layer (5 files, 79 functions), hooks (7), pages/components (~40): **KHÔNG 
 | 2.6 | Return shim in desktop mode | `frontend/src/lib/supabase.ts` | ~12 | ✅ |
 | 2.7 | SQLite schema (13 tables, PG→SQLite types) | `sqlite-migrations/001_initial.sql` | ~200 | ✅ |
 | 2.8 | Migration runner + `_migrations` table | `desktop/migrations/` | ~50 | ✅ |
-| 2.9 | Integration tests: all 79 functions vs SQLite | `__tests__/shim-integration.test.ts` | ~300 | ⏳ |
-| Gate | All 79 functions pass, 13 routes working, CRUD + tree + cầu đương | | | 🔄 |
+| 2.9 | Integration tests: all 79 functions vs SQLite | `__tests__/shim-integration.test.ts` | ~300 | ✅ |
+| Gate | All 79 functions pass, 13 routes working, CRUD + tree + cầu đương | | | ✅ |
 
 #### Phase 3: Build & Distribution (5–8 ngày)
 
