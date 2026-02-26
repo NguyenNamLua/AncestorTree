@@ -1,5 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+const isDesktopMode = process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -26,15 +28,23 @@ const fetchWithTimeout: typeof fetch = async (input, init) => {
 // Safe for single-tab apps where concurrent token refreshes are rare.
 const noopLock = async <T>(_name: string, _timeout: number, fn: () => Promise<T>): Promise<T> => fn();
 
-// Browser client uses cookies (shared with middleware)
-// Falls back to basic client during build when env vars are missing
-const supabase = supabaseUrl && supabaseAnonKey
-  ? createBrowserClient(supabaseUrl, supabaseAnonKey, {
+function createSupabaseClient(): SupabaseClient {
+  if (isDesktopMode) {
+    // Desktop mode: use SQLite shim (duck-typed to match SupabaseClient API surface)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('./supabase-desktop').desktopSupabase as SupabaseClient;
+  }
+  // Web mode: use real Supabase browser client (with fallback for build)
+  if (supabaseUrl && supabaseAnonKey) {
+    return createBrowserClient(supabaseUrl, supabaseAnonKey, {
       global: { fetch: fetchWithTimeout },
       auth: { lock: noopLock },
-    })
-  : createClient('https://placeholder.supabase.co', 'placeholder-key');
+    });
+  }
+  return createClient('https://placeholder.supabase.co', 'placeholder-key');
+}
 
+const supabase = createSupabaseClient();
 export { supabase };
 
 // Server-side client with service role (for admin operations)
