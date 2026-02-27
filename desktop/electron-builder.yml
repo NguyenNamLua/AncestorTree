@@ -34,7 +34,8 @@ mac:
   target:
     - target: dmg
       arch:
-        - universal
+        - x64
+        - arm64
   icon: build/icon.icns
 
 win:

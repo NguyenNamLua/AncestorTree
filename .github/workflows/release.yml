@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ─── macOS (.dmg universal) ─────────────────────────────────────────────────
+  # ─── macOS (.dmg x64 + arm64) ───────────────────────────────────────────────
   build-mac:
     name: Build macOS (.dmg)
     runs-on: macos-latest
@@ -59,10 +59,9 @@ jobs:
         run: cd desktop && npx tsc
 
       - name: Build macOS .dmg
-        run: cd desktop && npx electron-builder --mac
+        run: cd desktop && npx electron-builder --mac --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -115,9 +114,7 @@ jobs:
         run: cd desktop && npx tsc
 
       - name: Build Windows .exe
-        run: cd desktop && npx electron-builder --win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd desktop && npx electron-builder --win --publish never
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
