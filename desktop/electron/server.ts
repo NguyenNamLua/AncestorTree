@@ -55,33 +55,55 @@ function getDataDir(): string {
 }
 
 /** Start Next.js standalone server */
-export async function startServer(): Promise<string> {
+export async function startServer(isDev: boolean): Promise<string> {
   const port = await findFreePort();
   const host = '127.0.0.1';
 
   // Path to Next.js standalone server
   // In development: ../frontend/.next/standalone/server.js
   // In production (packaged): resources/standalone/server.js
-  const standaloneDir = process.env.NODE_ENV === 'development'
-    ? path.join(__dirname, '..', '..', 'frontend', '.next', 'standalone')
+  const standaloneDir = isDev
+    ? path.join(__dirname, '..', '..', '..', 'frontend', '.next', 'standalone')
     : path.join(process.resourcesPath || '', 'standalone');
 
   const serverScript = path.join(standaloneDir, 'server.js');
 
-  // B-2: Copy public/ into standalone dir for dev workflow.
-  // Production builds have public/ via electron-builder extraResources.
-  const publicSrc = path.resolve(standaloneDir, '..', '..', 'public');
-  const publicDst = path.join(standaloneDir, 'public');
-  if (!fs.existsSync(publicDst) && fs.existsSync(publicSrc)) {
-    fs.cpSync(publicSrc, publicDst, { recursive: true });
+  // Dev workflow: standalone build doesn't include public/ or .next/static/
+  // Copy them so the standalone server can serve assets correctly.
+  // Production builds have these via electron-builder extraResources.
+  if (isDev) {
+    const frontendDir = path.join(__dirname, '..', '..', '..', 'frontend');
+
+    const staticSrc = path.join(frontendDir, '.next', 'static');
+    const staticDst = path.join(standaloneDir, '.next', 'static');
+    // Always sync static files (overwrite) — standalone build doesn't include them
+    if (fs.existsSync(staticSrc)) {
+      fs.cpSync(staticSrc, staticDst, { recursive: true });
+    }
+
+    const publicSrc = path.join(frontendDir, 'public');
+    const publicDst = path.join(standaloneDir, 'public');
+    if (fs.existsSync(publicSrc)) {
+      fs.cpSync(publicSrc, publicDst, { recursive: true });
+    }
   }
 
   const dataDir = getDataDir();
 
   // CTO B-2: Resolve migrations dir based on environment
-  const migrationsDir = process.env.NODE_ENV === 'development'
-    ? path.join(__dirname, '..', '..', 'desktop', 'migrations')
+  const migrationsDir = isDev
+    ? path.join(__dirname, '..', '..', 'migrations')
     : path.join(process.resourcesPath || '', 'migrations');
+
+  console.log(`[Server] standaloneDir: ${standaloneDir}`);
+  console.log(`[Server] serverScript: ${serverScript}`);
+  console.log(`[Server] exists: ${fs.existsSync(serverScript)}`);
+  console.log(`[Server] migrationsDir: ${migrationsDir}`);
+  console.log(`[Server] port: ${port}`);
+
+  if (!fs.existsSync(serverScript)) {
+    throw new Error(`server.js not found at ${serverScript}. Run "pnpm build:next" first.`);
+  }
 
   serverProcess = fork(serverScript, [], {
     env: {

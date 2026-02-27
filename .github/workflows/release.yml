@@ -59,50 +59,6 @@ jobs:
           path: desktop/release/*.dmg
           retention-days: 7
 
-  # ─── Linux (.AppImage) ──────────────────────────────────────────────────────
-  build-linux:
-    name: Build Linux (.AppImage)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: '9'
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
-
-      - name: Install system deps (for electron-builder on Linux)
-        run: sudo apt-get install -y libarchive-tools fakeroot rpm
-
-      - name: Install frontend dependencies
-        run: cd frontend && pnpm install --frozen-lockfile
-
-      - name: Build Next.js standalone (for Electron)
-        run: cd frontend && ELECTRON_BUILD=true pnpm build
-
-      - name: Install desktop dependencies
-        run: cd desktop && npm ci
-
-      - name: Generate app icons
-        run: cd desktop && node scripts/generate-icons.mjs
-
-      - name: Build Electron app (Linux)
-        run: cd desktop && npm run build:linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-linux
-          path: desktop/release/*.AppImage
-          retention-days: 7
-
   # ─── Windows (.exe NSIS) ────────────────────────────────────────────────────
   build-windows:
     name: Build Windows (.exe)
@@ -149,7 +105,7 @@ jobs:
   # ─── Create GitHub Release ──────────────────────────────────────────────────
   release:
     name: Create GitHub Release
-    needs: [build-mac, build-linux, build-windows]
+    needs: [build-mac, build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
@@ -162,12 +118,6 @@ jobs:
         with:
           name: build-mac
           path: dist/mac
-
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-linux
-          path: dist/linux
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -194,7 +144,6 @@ jobs:
             |-------------|------|---------|
             | 🍎 macOS | `*.dmg` | Universal (Intel + Apple Silicon) |
             | 🪟 Windows | `*.exe` | NSIS installer |
-            | 🐧 Linux | `*.AppImage` | Chạy trực tiếp, không cần cài đặt |
 
             ### Hướng dẫn cài đặt
 
@@ -205,16 +154,10 @@ jobs:
             **Windows:** Chạy file `.exe` → làm theo hướng dẫn.
             > ⚠️ Windows SmartScreen có thể hiện cảnh báo → "More info" → "Run anyway"
 
-            **Linux:** Cấp quyền thực thi và chạy:
-            ```bash
-            chmod +x *.AppImage && ./*.AppImage
-            ```
-
             ### Lưu ý bảo mật
             Phiên bản này chưa được ký code (unsigned). Xem [hướng dẫn bypass Gatekeeper](https://support.apple.com/en-us/102445).
           files: |
             dist/mac/*.dmg
-            dist/linux/*.AppImage
             dist/windows/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

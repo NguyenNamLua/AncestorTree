@@ -2,7 +2,7 @@
  * @project AncestorTree
  * @file src/middleware.ts
  * @description Auth middleware for protected routes — Next.js 16 convention
- * @version 1.2.0
+ * @version 1.3.0
  * @updated 2026-02-26
  */
 
@@ -10,7 +10,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const publicPaths = ['/login', '/register', '/forgot-password', '/reset-password'];
+// Public paths: accessible without authentication (auth pages + landing)
+const publicPaths = ['/login', '/register', '/forgot-password', '/reset-password', '/welcome'];
 // All main app routes require authentication to protect personal data.
 // Unauthenticated requests to these paths are redirected to /login.
 const authRequiredPaths = [
@@ -69,11 +70,18 @@ export async function middleware(request: NextRequest) {
     user = null;
   }
 
-  // Redirect unauthenticated users from protected pages
+  // Public paths (landing, auth pages) — always allow, even if '/' matches via startsWith below
+  if (publicPaths.some(path => pathname === path || pathname.startsWith(path + '/'))) {
+    // Redirect authenticated users away from auth pages (but NOT landing /welcome)
+    if (user && !pathname.startsWith('/welcome') && publicPaths.filter(p => p !== '/welcome').some(p => pathname.startsWith(p))) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return response;
+  }
+
+  // Redirect unauthenticated users from protected pages to landing page
   if (!user && authRequiredPaths.some(path => pathname.startsWith(path))) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL('/welcome', request.url));
   }
 
   // Admin routes require admin or editor role
@@ -92,11 +100,6 @@ export async function middleware(request: NextRequest) {
       // On timeout/error, deny access to admin
       return NextResponse.redirect(new URL('/', request.url));
     }
-  }
-
-  // Redirect authenticated users away from auth pages
-  if (user && publicPaths.some(path => pathname.startsWith(path))) {
-    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return response;

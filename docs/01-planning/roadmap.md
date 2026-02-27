@@ -2,7 +2,7 @@
 project: AncestorTree
 path: docs/01-planning/roadmap.md
 type: planning
-version: 1.5.0
+version: 2.1.0
 updated: 2026-02-26
 owner: "@pm"
 status: approved
@@ -13,7 +13,7 @@ status: approved
 ## 0. What Actually Happened
 
 > **Planned:** 7 sprints over 6 weeks (Feb 24 – Apr 4, 2026)
-> **Actual: 7.5 sprints in 1 day.**
+> **Actual: 10 sprints in 2 days.**
 
 | Phase | When | What |
 | --- | --- | --- |
@@ -22,10 +22,11 @@ status: approved
 | **Sprint 7 — Cầu đương** | Rạng sáng 25/02 | Lịch cúng lễ xoay vòng, thuật toán DFS |
 | **Sprint 7.5** | Sáng 25/02/2026 | Family Relations UX + Tree hierarchical + Tree-scoped editor |
 | **Test + Ship** | Chiều–tối 25/02 | QA, code review, hotfix, deploy Vercel, ship to community |
-| **Sprint 8 — Local Dev** | 26/02/2026 | Supabase CLI + Docker local mode, seed data, setup script |
-| **Sprint 9 — Desktop** | 26/02/2026 → | Electron + sql.js standalone app (Phase 1: shell done, Phase 2-5: in progress) |
+| **Sprint 8 — Local Dev + Security** | 26/02/2026 | Supabase CLI + Docker local mode + RLS hardening |
+| **Sprint 9 — Desktop** | 26/02/2026 | Electron + sql.js standalone app (Phase 1-3 complete) |
+| **Sprint 10 — Landing Page** | 26/02/2026+ | Public landing page + community funnel + download links |
 
-**Tổng cộng:** ~24 giờ build + 1 ngày polish · 1 người · 8 AI agents · TinySDLC methodology
+**Tổng cộng:** ~36 giờ build · 1 người · 8 AI agents · TinySDLC methodology
 
 > Phần bên dưới là kế hoạch ban đầu — giữ lại như tài liệu tham khảo (planned vs actual).
 
@@ -228,7 +229,73 @@ status: approved
 
 ---
 
-### v2.0.0 - Community (Future)
+### v1.7.0 - Security Hardening (Sprint 8 Part B)
+
+**Target:** Feb 26, 2026 (actual)
+**Goal:** Vá lỗ hổng bảo mật dữ liệu cá nhân
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **Middleware** | Rename proxy.ts → middleware.ts, protect all (main) routes | P0 |
+| **RLS Hardening** | profiles auth-only, contact fields stripped, privacy defaults | P0 |
+| **Password Policy** | Minimum 8 characters | P1 |
+
+**Exit Criteria:**
+
+- [x] Middleware chạy đúng, bảo vệ tất cả route `(main)/`
+- [x] Supabase REST API không trả về contact data khi chưa đăng nhập
+- [x] `privacy_level` mặc định `1` cho thành viên mới
+
+---
+
+### v2.0.0 - Desktop App (Sprint 9)
+
+**Target:** Feb 26, 2026 (actual)
+**Goal:** Bản cài đặt offline cho thành viên phi kỹ thuật
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **Electron Shell** | BrowserWindow, server spawner, preload | P1 |
+| **sql.js Shim** | Supabase Client → SQLite (79 functions unchanged) | P1 |
+| **Desktop DB API** | query-builder, type-coerce, rpc-handlers, error-mapper | P1 |
+| **Build Targets** | macOS .dmg, Windows .exe (NSIS), Linux .AppImage | P1 |
+| **First-run Wizard** | Tên dòng họ + admin + import | P1 |
+| **ZIP Export/Import** | Data + media portability | P1 |
+
+**Exit Criteria:**
+
+- [x] Electron app launches, sql.js WASM loads
+- [x] Desktop DB API (6 files) handles all queries
+- [x] Build targets configured (mac/win/linux)
+- [x] First-run wizard + ZIP export/import working
+- [x] `pnpm build` (web mode) unaffected
+
+---
+
+### v2.1.0 - Landing Page (Sprint 10)
+
+**Target:** Feb 26, 2026+
+**Goal:** Public landing page tại `ancestortree.info`
+
+| Epic | Stories | Priority |
+|------|---------|----------|
+| **Landing Page** | 7-section public page (hero, features, download, community) | P1 |
+| **SEO** | Canonical URL, robots.txt, OG metadata | P1 |
+| **Community Funnel** | GitHub Issues templates (bug report, feature request) | P1 |
+| **Download Links** | Desktop app → GitHub Releases (.dmg, .exe) | P1 |
+| **Community Docs** | Update all 8 posts from v1.5.0 → v2.1.0 | P1 |
+
+**Exit Criteria:**
+
+- [ ] `/welcome` loads without login
+- [ ] Download links to GitHub Releases
+- [ ] Community links to GitHub Issues/Discussions
+- [ ] SEO: canonical + robots.txt
+- [ ] 8 community docs at v2.1.0
+
+---
+
+### v3.0.0 - Community (Future)
 
 **Target:** Q2 2026+
 **Goal:** Features for broader community
@@ -405,12 +472,24 @@ status: approved
 |--------|--------|
 | Electron launches + BrowserWindow renders | Yes |
 | sql.js WASM loads in standalone mode | Yes |
-| All 79 data layer functions pass vs SQLite shim | Yes |
-| All 13 routes render in desktop mode | Yes |
-| CRUD works on all 13 tables | Yes |
-| Installer works on macOS + Windows + Linux | Yes |
+| Desktop DB API (6 files) operational | Yes |
+| Build targets (mac/win/linux) configured | Yes |
+| First-run wizard works | Yes |
+| ZIP export/import works | Yes |
 | Web build (`pnpm build`) unaffected | Yes |
-| Export/import between web ↔ desktop | Yes |
+
+### Sprint 10 — Landing Page
+
+| Metric | Target |
+|--------|--------|
+| `/welcome` loads without login | Yes |
+| All 7 sections render correctly | Yes |
+| Download links → GitHub Releases | Yes |
+| Community links → GitHub Issues/Discussions | Yes |
+| SEO: canonical URL + robots.txt | Yes |
+| Mobile responsive (375px, 768px, 1024px) | Yes |
+| Community docs updated to v2.1.0 | Yes |
+| `pnpm build` passes | Yes |
 
 ---
 

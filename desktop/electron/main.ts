@@ -11,14 +11,21 @@ import * as path from 'path';
 import { autoUpdater } from 'electron-updater';
 import { startServer, stopServer, getServerUrl } from './server';
 
+const isDev = !app.isPackaged;
+console.log('[AncestorTree] Main process starting...');
+console.log('[AncestorTree] isDev:', isDev);
+console.log('[AncestorTree] __dirname:', __dirname);
+
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow(): void {
+  console.log('[AncestorTree] Creating window...');
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    show: true,
     title: 'Gia Phả Điện Tử',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     webPreferences: {
@@ -30,6 +37,7 @@ function createWindow(): void {
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 16, y: 16 },
   });
+  console.log('[AncestorTree] Window created');
 
   // Open external links in default browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -73,7 +81,7 @@ app.whenReady().then(async () => {
 
   // Start Next.js server
   try {
-    const url = await startServer();
+    const url = await startServer(isDev);
     console.log(`[AncestorTree] Server ready at ${url}`);
     if (mainWindow) {
       await mainWindow.loadURL(url);

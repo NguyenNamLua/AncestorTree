@@ -2,7 +2,7 @@
 project: AncestorTree
 path: docs/04-build/SPRINT-PLAN.md
 type: build
-version: 1.7.0
+version: 2.1.0
 updated: 2026-02-26
 owner: "@pm"
 status: approved
@@ -15,16 +15,17 @@ status: approved
 ```
 Timeline: Feb 24 → Apr 11, 2026 (7 weeks)
 
-Sprint 1 ████████████████████████████████ Week 1 (Feb 24-28) ✅ DONE
-Sprint 2 ████████████████████████████████ Week 2 (Mar 3-7)   ✅ DONE
-Sprint 3 ████████████████████████████████ Week 3 (Mar 10-14) ✅ DONE
-Sprint 4 ████████████████████████████████ Week 4 (Mar 17-21) ✅ DONE
-Sprint 5 ████████████████████████████████ Week 5 (Mar 24-28) ✅ DONE
-Sprint 6 ████████████████████████████████ Week 6 (Mar 31-Apr 4) ✅ DONE
-Sprint 7 ████████████████████████████████ Week 7 (Apr 7-11)  ✅ DONE
-Sprint 7.5 ██████████████████████████████ (same day)         ✅ DONE
-Sprint 8 ████████████████████████████████ Week 8 (Apr 14-18) ✅ DONE
-Sprint 9 ████████████████████████████████ Week 9+ (TBD)     🔄 PLANNING
+Sprint 1  ████████████████████████████████ Week 1 (Feb 24-28)    ✅ DONE
+Sprint 2  ████████████████████████████████ Week 2 (Mar 3-7)      ✅ DONE
+Sprint 3  ████████████████████████████████ Week 3 (Mar 10-14)    ✅ DONE
+Sprint 4  ████████████████████████████████ Week 4 (Mar 17-21)    ✅ DONE
+Sprint 5  ████████████████████████████████ Week 5 (Mar 24-28)    ✅ DONE
+Sprint 6  ████████████████████████████████ Week 6 (Mar 31-Apr 4) ✅ DONE
+Sprint 7  ████████████████████████████████ Week 7 (Apr 7-11)     ✅ DONE
+Sprint 7.5 ██████████████████████████████ (same day)             ✅ DONE
+Sprint 8  ████████████████████████████████ Week 8 (Apr 14-18)    ✅ DONE
+Sprint 9  ████████████████████████████████ Week 9 (Feb 26)       ✅ DONE (Phase 1-3)
+Sprint 10 ████████████████████████████████ Week 10 (Feb 26+)     🔄 IN PROGRESS
 
 Milestones:
 ├── v0.1.0 Alpha    → End Sprint 1    ✅
@@ -36,7 +37,8 @@ Milestones:
 ├── v1.4.0 CauDuong → End Sprint 7    ✅
 ├── v1.5.0 Relations→ End Sprint 7.5  ✅
 ├── v1.7.0 LocalDev+Security → End Sprint 8 ✅
-└── v2.0.0 Desktop  → End Sprint 9    🔄 Planning
+├── v2.0.0 Desktop  → End Sprint 9    ✅ (Phase 1-3)
+└── v2.1.0 Landing  → End Sprint 10   🔄 In Progress
 ```
 
 ---
@@ -422,50 +424,57 @@ Milestones:
 | **Sprint 7** | Ceremony | Cầu đương rotation + DFS algorithm | ~1,500 | ✅ |
 | **Sprint 7.5** | Relations | Family relations UX + tree filter | ~2,000 | ✅ |
 | **Sprint 8** | LocalDev + Security | Supabase CLI + Docker + RLS hardening + middleware fix | ~1,200 | ✅ |
-| **Sprint 9** | Desktop App | Electron + sql.js shim, SQLite DB, 3-platform installer | ~1,800 est. | 🔄 |
-| **Total** | | | **~21,500** | |
+| **Sprint 9** | Desktop App | Electron + sql.js shim, SQLite DB, 3-platform build | ~1,800 | ✅ (P1-3) |
+| **Sprint 10** | Landing Page | Public landing page + community funnel + download links | ~500 est. | 🔄 |
+| **Total** | | | **~22,000** | |
 
 ---
 
 ## 📋 Feature Completion Matrix
 
-| Feature | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S7.5 | S8 | Status |
-|---------|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|:--:|:------:|
-| Project Setup | ✅ | | | | | | | | | DONE |
-| Database Schema | ✅ | | | | | | | | | DONE |
-| Auth (Login/Register) | ✅ | | | | | | | | | DONE |
-| Layout & Navigation | ✅ | | | | | | | | | DONE |
-| People CRUD | | ✅ | | | | | | | | DONE |
-| Family Relationships | | ✅ | | | | | | | | DONE |
-| Search & Filter | | ✅ | | | | | | | | DONE |
-| Basic Tree View | | ✅ | | | | | | | | DONE |
-| Interactive Tree | | | ✅ | | | | | | | DONE |
-| Admin Panel | | | ✅ | | | | | | | DONE |
-| Homepage & Stats | | | ✅ | | | | | | | DONE |
-| Directory | | | | ✅ | | | | | | DONE |
-| Memorial Calendar | | | | ✅ | | | | | | DONE |
-| Lunar Calendar | | | | ✅ | | | | | | DONE |
-| Contributions | | | | ✅ | | | | | | DONE |
-| GEDCOM Export | | | | | ✅ | | | | | DONE |
-| Book Generator | | | | | ✅ | | | | | DONE |
-| Photo Upload | | | | | ✅ | | | | | DONE |
-| Error Boundaries | | | | | ✅ | | | | | DONE |
-| Achievement Honors | | | | | | ✅ | | | | DONE |
-| Education Fund | | | | | | ✅ | | | | DONE |
-| Scholarships & Rewards | | | | | | ✅ | | | | DONE |
-| Family Charter | | | | | | ✅ | | | | DONE |
-| Cầu đương (rotation+DFS) | | | | | | | ✅ | | | DONE |
-| FamilyRelationsCard | | | | | | | | ✅ | | DONE |
-| Tree hierarchical layout | | | | | | | | ✅ | | DONE |
-| Tree-scoped editor | | | | | | | | ✅ | | DONE |
-| Local dev (Supabase CLI) | | | | | | | | | ✅ | DONE |
-| Middleware auth guard | | | | | | | | | ✅ | DONE |
-| RLS: profiles protected | | | | | | | | | ✅ | DONE |
-| RLS: contact data private | | | | | | | | | ✅ | DONE |
-| RLS: tables auth-gated | | | | | | | | | ✅ | DONE |
-| Electron shell (Desktop) | | | | | | | | | | S9 |
-| sql.js SQLite shim | | | | | | | | | | S9 |
-| Offline installer (.dmg/.exe) | | | | | | | | | | S9 |
+| Feature | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S7.5 | S8 | S9 | S10 | Status |
+|---------|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|:--:|:--:|:---:|:------:|
+| Project Setup | ✅ | | | | | | | | | | | DONE |
+| Database Schema | ✅ | | | | | | | | | | | DONE |
+| Auth (Login/Register) | ✅ | | | | | | | | | | | DONE |
+| Layout & Navigation | ✅ | | | | | | | | | | | DONE |
+| People CRUD | | ✅ | | | | | | | | | | DONE |
+| Family Relationships | | ✅ | | | | | | | | | | DONE |
+| Search & Filter | | ✅ | | | | | | | | | | DONE |
+| Basic Tree View | | ✅ | | | | | | | | | | DONE |
+| Interactive Tree | | | ✅ | | | | | | | | | DONE |
+| Admin Panel | | | ✅ | | | | | | | | | DONE |
+| Homepage & Stats | | | ✅ | | | | | | | | | DONE |
+| Directory | | | | ✅ | | | | | | | | DONE |
+| Memorial Calendar | | | | ✅ | | | | | | | | DONE |
+| Lunar Calendar | | | | ✅ | | | | | | | | DONE |
+| Contributions | | | | ✅ | | | | | | | | DONE |
+| GEDCOM Export | | | | | ✅ | | | | | | | DONE |
+| Book Generator | | | | | ✅ | | | | | | | DONE |
+| Photo Upload | | | | | ✅ | | | | | | | DONE |
+| Error Boundaries | | | | | ✅ | | | | | | | DONE |
+| Achievement Honors | | | | | | ✅ | | | | | | DONE |
+| Education Fund | | | | | | ✅ | | | | | | DONE |
+| Scholarships & Rewards | | | | | | ✅ | | | | | | DONE |
+| Family Charter | | | | | | ✅ | | | | | | DONE |
+| Cầu đương (rotation+DFS) | | | | | | | ✅ | | | | | DONE |
+| FamilyRelationsCard | | | | | | | | ✅ | | | | DONE |
+| Tree hierarchical layout | | | | | | | | ✅ | | | | DONE |
+| Tree-scoped editor | | | | | | | | ✅ | | | | DONE |
+| Local dev (Supabase CLI) | | | | | | | | | ✅ | | | DONE |
+| Middleware auth guard | | | | | | | | | ✅ | | | DONE |
+| RLS: profiles protected | | | | | | | | | ✅ | | | DONE |
+| RLS: contact data private | | | | | | | | | ✅ | | | DONE |
+| RLS: tables auth-gated | | | | | | | | | ✅ | | | DONE |
+| Electron shell (Desktop) | | | | | | | | | | ✅ | | DONE |
+| sql.js SQLite shim | | | | | | | | | | ✅ | | DONE |
+| Desktop build targets | | | | | | | | | | ✅ | | DONE |
+| ZIP export/import | | | | | | | | | | ✅ | | DONE |
+| First-run wizard | | | | | | | | | | ✅ | | DONE |
+| Public landing page | | | | | | | | | | | 🔄 | S10 |
+| GitHub issue templates | | | | | | | | | | | 🔄 | S10 |
+| Community docs v2.1.0 | | | | | | | | | | | 🔄 | S10 |
+| SEO (canonical + robots) | | | | | | | | | | | 🔄 | S10 |
 
 ---
 
@@ -499,11 +508,37 @@ Milestones:
 | S7.5 | Tree branch filter | ✅ ?root= URL parameter working | PASS |
 | S7.5 | Tree-scoped editor | ✅ RLS + admin UI complete | PASS |
 
+### Sprint 9 — Desktop App
+
+| Metric | Target | Result |
+|--------|--------|--------|
+| Electron launches + BrowserWindow renders | Yes | PASS |
+| sql.js WASM loads in standalone mode | Yes | PASS |
+| Desktop DB API (6 files) passes | Yes | PASS |
+| Supabase client shim (auth, storage, query) | Yes | PASS |
+| Build targets (mac/win/linux) configured | Yes | PASS |
+| First-run wizard works | Yes | PASS |
+| ZIP export/import works | Yes | PASS |
+| Web build (`pnpm build`) unaffected | Yes | PASS |
+
+### Sprint 10 — Landing Page
+
+| Metric | Target | Result |
+|--------|--------|--------|
+| `/welcome` loads without login | Yes | ⏳ |
+| All 7 sections render correctly | Yes | ⏳ |
+| Download links point to GitHub Releases | Yes | ⏳ |
+| Community links to GitHub Issues/Discussions | Yes | ⏳ |
+| SEO: canonical URL + robots.txt | Yes | ⏳ |
+| Mobile responsive (375px, 768px, 1024px) | Yes | ⏳ |
+| Community docs updated to v2.1.0 | Yes | ⏳ |
+| `pnpm build` passes | Yes | ⏳ |
+
 ### Final Release
 
 | Metric | Target | Result |
 |--------|--------|--------|
-| **Features complete** | 100% of MVP + v1.5 | ✅ DONE |
+| **Features complete** | 100% of MVP + v2.1 | ✅ DONE (through S9) |
 | **Bugs** | 0 critical, <5 minor | ✅ 0 critical |
 | **Mobile** | 100% responsive | ✅ DONE |
 | **Build** | pnpm build + lint clean | ✅ PASS |
@@ -822,9 +857,9 @@ frontend/
 
 ---
 
-**Status:** ✅ Sprints 1-8 Complete (v1.7.0) | 🔄 Sprint 9 Phase 3 Complete (v2.0.0 pending)
+**Status:** ✅ Sprints 1-9 Complete (v2.0.0) | 🔄 Sprint 10 In Progress (v2.1.0)
 
-*Updated: 2026-02-26 — Sprint 8 complete: Local Development Mode (Supabase CLI + Docker) + Security Hardening (RLS, middleware, privacy defaults). Sprint 9 Phase 1-3 complete: Electron shell, SQLite shim, app icons, GitHub Actions, auto-update, ZIP export/import, first-run wizard.*
+*Updated: 2026-02-26 — Sprint 9 complete (Phase 1-3): Electron shell, sql.js SQLite shim, desktop build targets, ZIP export/import, first-run wizard, GitHub Actions, auto-update. Sprint 10 in progress: Landing page + community docs update.*
 
 ---
 
@@ -1004,5 +1039,116 @@ docs/02-design/ADR/           ADR-001 ~ ADR-004
 | Phase 3 | 5–8 ngày |
 | Phase 4 | 3–5 ngày |
 | **Total** | **22–34 ngày** |
+
+---
+
+## 🏃 Sprint 10: Landing Page — ancestortree.info 🔄
+
+**Dates:** Feb 26, 2026+
+**Goal:** Public landing page tại `ancestortree.info` — showcase, community support, download links
+**Version:** v2.1.0
+**CTO Review:** ✅ Approved with 5 conditions
+
+### Business Context
+
+Dự án cần một trang web công khai để:
+1. Demo/giới thiệu app cho cộng đồng
+2. Hỗ trợ người dùng — liên kết GitHub Issues/Discussions
+3. Nhận góp ý sửa lỗi và đề xuất tính năng
+4. Cung cấp link tải bản desktop (.dmg macOS, .exe Windows) cho người dùng phi kỹ thuật
+
+### CTO Conditions (5)
+
+| # | Condition | Resolution |
+|---|-----------|------------|
+| 1 | Version = v2.1.0 (not v1.8.0) | Sprint 9 = v2.0.0, Sprint 10 = v2.1.0 |
+| 2 | Download links: no dead links | State B (pending) for launch, swap to State A after artifacts exist |
+| 3 | Root layout wraps everything | Known limitation — `(landing)` inherits AuthProvider. Document, fix later |
+| 4 | SEO: canonical + robots.txt | Add canonical URL + `public/robots.txt` |
+| 5 | Offline claim correction | Fix "Does not work offline" in community docs |
+
+### Approach
+
+Add `(landing)` route group to existing Next.js app — reuse Tailwind 4, shadcn/ui, emerald theme. No separate project.
+
+- Landing page at `/welcome` path (keeping `/` as authenticated homepage)
+- Middleware updated: `/welcome` in publicPaths, check public paths FIRST
+- Vercel custom domain: `ancestortree.info` → same deployment
+
+### Tasks
+
+| # | Task | Hours | Owner | Status |
+|---|------|:-----:|:------|:------:|
+| **Phase 1: Middleware + Route** | | | | |
+| 1 | Update middleware — add `/welcome` to publicPaths, fix path matching | 0.5h | @fullstack | ✅ |
+| 2 | Create `(landing)/layout.tsx` — standalone layout (no sidebar) | 0.5h | @fullstack | ⏳ |
+| 3 | Create `(landing)/welcome/page.tsx` — 7 sections (hero, features, screenshots, download, community, developers, footer) | 2h | @fullstack | ⏳ |
+| 4 | Add canonical URL metadata + `public/robots.txt` (CTO #4) | 0.5h | @fullstack | ⏳ |
+| **Phase 2: Assets** | | | | |
+| 5 | App screenshots (tree, people, admin, mobile) → `public/screenshots/` | 1h | @fullstack | ⏳ |
+| 6 | OG social preview image → `public/og-landing.png` | 0.5h | @fullstack | ⏳ |
+| **Phase 3: GitHub Templates** | | | | |
+| 7 | Bug report template → `.github/ISSUE_TEMPLATE/bug_report.md` | 0.25h | @pm | ⏳ |
+| 8 | Feature request template → `.github/ISSUE_TEMPLATE/feature_request.md` | 0.25h | @pm | ⏳ |
+| **Phase 4: Community Docs** | | | | |
+| 9 | Update 8 community docs v1.5.0 → v2.1.0 (desktop info, landing URL, offline fix) | 1.5h | @pm | ⏳ |
+| **Phase 5: Domain** | | | | |
+| 10 | Configure Vercel custom domain `ancestortree.info` + DNS CNAME | 0.5h | @pm | ⏳ |
+
+### Page Sections
+
+1. **Hero** — "Gia Phả Điện Tử" + tagline + CTAs: "Tải về máy tính" + "Mã nguồn GitHub"
+2. **Features** — 8 cards (tree, lunar calendar, chi/nhánh, vinh danh, hương ước, cầu đương, relations, security)
+3. **Screenshots** — 3-4 app screenshots (placeholder boxes if captures not ready)
+4. **Download** — Windows (.exe) + macOS (.dmg) cards → GitHub Releases (State B: "Sắp có" until artifacts exist)
+5. **Community** — Báo lỗi + Đề xuất tính năng + Thảo luận (→ GitHub Issues/Discussions)
+6. **For Developers** — MIT license, fork & deploy 30 min, tech stack
+7. **Footer** — GitHub, MTS, TinySDLC links, version
+
+### File Structure
+
+```text
+frontend/
+├── public/
+│   ├── robots.txt                              NEW (S10)
+│   ├── og-landing.png                          NEW (S10)
+│   └── screenshots/                            NEW (S10)
+│       ├── tree-view.png
+│       ├── people-list.png
+│       ├── admin-panel.png
+│       └── mobile-view.png
+├── src/app/
+│   └── (landing)/
+│       ├── layout.tsx                          NEW (S10)
+│       └── welcome/
+│           └── page.tsx                        NEW (S10)
+└── src/middleware.ts                            MODIFIED (S10)
+
+.github/ISSUE_TEMPLATE/
+├── bug_report.md                               NEW (S10)
+└── feature_request.md                          NEW (S10)
+```
+
+### Acceptance Criteria
+
+| ID | Criteria | Status |
+|----|----------|--------|
+| AC-S10-01 | `/welcome` loads without login — all 7 sections visible | ⏳ |
+| AC-S10-02 | `/` still redirects to login (existing behavior preserved) | ⏳ |
+| AC-S10-03 | Download links point to GitHub Releases (State B OK for launch) | ⏳ |
+| AC-S10-04 | Community links to GitHub Issues/Discussions work | ⏳ |
+| AC-S10-05 | canonical URL set to `https://ancestortree.info/welcome` | ⏳ |
+| AC-S10-06 | `robots.txt` disallows auth/app pages, allows `/welcome` | ⏳ |
+| AC-S10-07 | Mobile responsive (375px, 768px, 1024px) | ⏳ |
+| AC-S10-08 | 8 community docs updated to v2.1.0 with landing URL + desktop info | ⏳ |
+| AC-S10-09 | `pnpm build` passes without errors | ⏳ |
+
+### Dependencies
+
+- Requires: Sprint 9 complete (desktop build targets for download links)
+- Requires: Vercel account with custom domain support
+- Requires: Domain `ancestortree.info` configured on Vercel
+
+---
 
 *SDLC Framework 6.1.1 - Stage 04 Build*

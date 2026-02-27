@@ -44,6 +44,21 @@ Phần mềm quản lý gia phả điện tử giúp gìn giữ và truyền th�
 - **Privacy mặc định an toàn** - Thành viên mới tạo mặc định chế độ `members only`
 - **profiles bảo vệ** - Danh sách tài khoản không có thể bị thu thập nếu chưa đăng nhập
 
+### Desktop App (v1.8)
+
+- **Cài và chạy** - Tải installer, click cài, dùng ngay — không cần Node.js, Docker, hay tài khoản cloud
+- **Hoạt động offline** - Dữ liệu lưu trên máy (SQLite), không cần internet
+- **Đầy đủ chức năng** - 100% tính năng giống bản web
+- **Cross-platform** - Hỗ trợ macOS và Windows
+- **Dữ liệu demo** - 18 thành viên 5 đời sẵn sàng khi cài đặt
+- **Tự động cập nhật** - Thông báo khi có phiên bản mới
+
+### Landing Page (v2.1)
+
+- **Trang giới thiệu** - Hero, tính năng, screenshots, download, cộng đồng
+- **SEO** - Canonical URL, robots.txt, Open Graph
+- **Download links** - Liên kết tải desktop app cho macOS/Windows
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -52,12 +67,25 @@ Phần mềm quản lý gia phả điện tử giúp gìn giữ và truyền th�
 | Styling | Tailwind CSS 4, shadcn/ui, Radix UI |
 | Database | Supabase (PostgreSQL, Auth, Storage, RLS) |
 | State | React Query (TanStack Query) |
+| Desktop | Electron 34, sql.js (WASM SQLite) |
 | Deployment | Vercel + Supabase Cloud |
 | Cost | **$0/tháng** (100% free tier) |
 
 ## Quick Start
 
-### Option A: Local Development (no cloud account needed)
+### Option A: Desktop App (dành cho người dùng phổ thông)
+
+> Không cần cài gì thêm — tải về, cài đặt, dùng ngay.
+
+1. Tải file cài đặt từ [GitHub Releases](https://github.com/Minh-Tam-Solution/AncestorTree/releases):
+   - **macOS:** `AncestorTree-x.x.x.dmg` (Intel) hoặc `AncestorTree-x.x.x-arm64.dmg` (Apple Silicon)
+   - **Windows:** `AncestorTree-Setup-x.x.x.exe`
+2. Cài đặt và mở ứng dụng
+3. Dữ liệu demo 18 thành viên sẵn sàng
+
+See [docs/04-build/INSTALLATION-GUIDE.md](./docs/04-build/INSTALLATION-GUIDE.md) for detailed instructions.
+
+### Option B: Local Development (no cloud account needed)
 
 > Requires Docker Desktop + Supabase CLI
 
@@ -75,7 +103,7 @@ Demo login: `admin@giapha.local` / `admin123`
 
 See [docs/04-build/LOCAL-DEVELOPMENT.md](./docs/04-build/LOCAL-DEVELOPMENT.md) for full guide.
 
-### Option B: Supabase Cloud
+### Option C: Supabase Cloud
 
 ```bash
 git clone https://github.com/Minh-Tam-Solution/AncestorTree.git
@@ -130,6 +158,12 @@ AncestorTree/
 │           ├── 20260224000003_sprint75_migration.sql
 │           ├── 20260224000004_storage_setup.sql
 │           └── 20260226000005_security_hardening.sql
+├── desktop/                        # Electron desktop app (Sprint 9)
+│   ├── electron/                   # Main process (main.ts, server.ts, preload.ts)
+│   ├── build/                      # App icons (icns, ico, png)
+│   ├── migrations/                 # SQLite versioned migrations + seed data
+│   ├── electron-builder.yml        # Cross-platform build config
+│   └── package.json                # Electron + sql.js deps
 ├── .sdlc-config.json               # SDLC configuration
 ├── CLAUDE.md                       # AI assistant guidelines
 └── README.md
@@ -157,7 +191,7 @@ Full SDLC documentation (9 docs, 141KB):
 | 00-Foundation | Vision, Problem Statement, Market Research, Business Case |
 | 01-Planning | BRD (77 FRs + 17 NFRs), Roadmap |
 | 02-Design | Technical Design (13 tables), UI/UX Design |
-| 04-Build | Sprint Plan (8 sprints, v1.7.0) |
+| 04-Build | Sprint Plan, Installation Guide, User Guide |
 
 See [docs/README.md](./docs/README.md) for full documentation index.
 
@@ -173,12 +207,23 @@ v1.4.0 Ceremony [##########] Done - Cầu đương rotation + DFS algorithm
 v1.5.0 Relations[##########] Done - Family relations UX + tree filter by root
 v1.6.0 LocalDev  [##########] Done - Supabase CLI + Docker local mode
 v1.7.0 Security  [##########] Done - RLS hardening + middleware fix + privacy defaults
-v2.0.0 Community [----------] Future - Nhà thờ họ, Notifications, Cross-clan
+v1.8.0 Desktop   [##########] Done - Electron + sql.js standalone desktop app
+v2.1.0 Landing   [##########] Done - Landing page + community docs + SEO
+v3.0.0 Community [----------] Future - Nhà thờ họ, Notifications, Cross-clan
 ```
 
 ## For Your Own Clan
 
-AncestorTree is designed to be **forked and customized**. Any Vietnamese family can:
+AncestorTree is designed for **any Vietnamese family**:
+
+### Cách nhanh nhất (Desktop App)
+
+1. Tải file cài đặt từ [GitHub Releases](https://github.com/Minh-Tam-Solution/AncestorTree/releases)
+2. Cài đặt → Mở ứng dụng → Bắt đầu nhập dữ liệu
+
+Tổng thời gian: **5 phút**. Chi phí: **$0**.
+
+### Cách nâng cao (Web App)
 
 1. Fork this repo
 2. Create a free Supabase project

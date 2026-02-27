@@ -2,7 +2,7 @@
 project: AncestorTree
 path: CLAUDE.md
 type: agent-guidelines
-version: 1.7.0
+version: 2.1.0
 updated: 2026-02-26
 ---
 
@@ -15,9 +15,9 @@ This file provides guidance to AI assistants (Claude, GPT, etc.) when working wi
 **AncestorTree** (Gia Phả Điện Tử) is a digital family tree management system for Chi tộc Đặng Đình, Thạch Lâm, Hà Tĩnh.
 
 - **Repository:** https://github.com/Minh-Tam-Solution/AncestorTree
-- **Current Version:** v1.7.0 (Sprint 8 + Security Hardening)
+- **Current Version:** v2.1.0 (Sprint 10 — Landing Page + Desktop App)
 - **SDLC Tier:** LITE (5 stages)
-- **Tech Stack:** Next.js 16, React 19, Tailwind CSS 4, Supabase
+- **Tech Stack:** Next.js 16, React 19, Tailwind CSS 4, Supabase, Electron 34 (desktop)
 - **Built with:** [TinySDLC](https://github.com/Minh-Tam-Solution/tinysdlc) + [MTS-SDLC-Lite](https://github.com/Minh-Tam-Solution/MTS-SDLC-Lite)
 
 ## SDLC Framework v6.1.0 - LITE Tier
@@ -131,6 +131,18 @@ AncestorTree/
 │   ├── migrations/                 # SQLite versioned migrations
 │   ├── electron-builder.yml        # Cross-platform build config
 │   └── package.json                # Electron + sql.js deps
+├── desktop/                        # Electron desktop app (Sprint 9)
+│   ├── electron/
+│   │   ├── main.ts                 # App lifecycle, window, server start
+│   │   ├── server.ts               # Start/stop Next.js standalone server
+│   │   └── preload.ts              # Context bridge (minimal)
+│   ├── build/                      # App icons (icns, ico, png)
+│   ├── migrations/                 # SQLite versioned migrations
+│   │   ├── 001-initial-schema.sql  # 13 tables (ported from PG)
+│   │   └── 002-seed-demo-data.sql  # Demo: 18 thành viên, 5 đời
+│   ├── electron-builder.yml        # Cross-platform build config
+│   ├── package.json                # Electron + sql.js deps
+│   └── tsconfig.json
 ├── .sdlc-config.json               # SDLC configuration
 ├── CLAUDE.md                       # AI assistant guidelines
 └── README.md                       # Project overview
@@ -176,6 +188,29 @@ pnpm local:reset      # Reset DB + re-seed demo data
 ```
 
 See `docs/04-build/LOCAL-DEVELOPMENT.md` for full local dev guide.
+
+### Desktop App (Electron)
+
+```bash
+cd desktop
+
+# Install dependencies
+pnpm install
+
+# Development (requires frontend standalone build first)
+cd ../frontend && ELECTRON_BUILD=true pnpm build && cd ../desktop
+pnpm dev              # Compile TS + launch Electron
+
+# Build installers
+pnpm build:mac        # macOS .dmg
+pnpm build:win        # Windows .exe (NSIS)
+```
+
+**Architecture:** Electron shell → Next.js standalone server (localhost) → sql.js (WASM SQLite)
+
+**Key env vars:** `DESKTOP_MODE=true`, `NEXT_PUBLIC_DESKTOP_MODE=true`, `DESKTOP_DATA_DIR=~/AncestorTree`
+
+**Data:** `~/AncestorTree/data/ancestortree.db` (SQLite), `~/AncestorTree/media/` (photos)
 
 ## Coding Conventions
 
@@ -240,6 +275,14 @@ chore/upgrade-deps
 | Sprint Plan | `docs/04-build/SPRINT-PLAN.md` |
 | Test Plan | `docs/05-test/TEST-PLAN.md` |
 | Community Launch | `docs/00-foundation/06-Community/Community-Launch-Strategy.md` |
+| Desktop Main | `desktop/electron/main.ts` |
+| Desktop Server | `desktop/electron/server.ts` |
+| SQLite Shim (client) | `frontend/src/lib/sqlite-supabase-shim.ts` |
+| SQLite DB API | `frontend/src/app/api/desktop-db/route.ts` |
+| SQLite Schema | `desktop/migrations/001-initial-schema.sql` |
+| Installation Guide | `docs/04-build/INSTALLATION-GUIDE.md` |
+| User Guide | `docs/04-build/USER-GUIDE.md` |
+| Landing Page | `frontend/src/app/(landing)/welcome/page.tsx` |
 
 ## Common Tasks
 
@@ -282,3 +325,17 @@ chore/upgrade-deps
 - React Query hooks handle caching, invalidation, and optimistic updates
 - Admin pages require editor role guard
 - All pages should have error.tsx and loading.tsx boundaries
+
+### Desktop Mode Specifics
+
+- Desktop uses **sql.js (WASM SQLite)** — data layer code is UNCHANGED
+- `sqlite-supabase-shim.ts` serializes Supabase queries → fetch `/api/desktop-db`
+- `sqlite-auth-shim.ts` mocks auth (single-user admin, no real login)
+- `sqlite-storage-shim.ts` routes media to `/api/media/` (local filesystem)
+- Desktop mode is detected via `process.env.NEXT_PUBLIC_DESKTOP_MODE === 'true'`
+- `supabase.ts` conditionally returns shim client in desktop mode
+- `middleware.ts` bypasses auth checks when `DESKTOP_MODE=true`
+- SQLite migrations in `desktop/migrations/` — additive only, `_migrations` version table
+- Desktop DB at `~/AncestorTree/data/ancestortree.db`, media at `~/AncestorTree/media/`
+- Boolean columns: SQLite uses 0/1, API route converts ↔ true/false
+- JSONB columns: stored as TEXT in SQLite, `JSON.stringify()`/`JSON.parse()` in API route

@@ -2,7 +2,7 @@
 project: AncestorTree
 path: docs/02-design/technical-design.md
 type: design
-version: 1.5.0
+version: 2.1.0
 updated: 2026-02-26
 owner: "@dev-team"
 status: approved
@@ -20,6 +20,7 @@ status: approved
 | 1.3.0   | 2026-02-25 | @architect | Add Cầu đương tables + DFS rotation algorithm (Sprint 7) |
 | 1.4.0   | 2026-02-26 | @architect | Add Local Development Mode — Supabase CLI + Docker (Sprint 8) |
 | 1.5.0   | 2026-02-26 | @architect | Add Desktop App Architecture — Electron + sql.js Shim (Sprint 9 Phase 1) |
+| 2.1.0   | 2026-02-26 | @pm        | Add Landing Page route group + SEO architecture (Sprint 10) |
 
 ---
 
@@ -800,6 +801,9 @@ src/
 │   ├── (auth)/                       # Auth pages (no sidebar)
 │   │   ├── login/page.tsx
 │   │   └── register/page.tsx
+│   ├── (landing)/                    # Public landing page (no auth, no sidebar)
+│   │   ├── layout.tsx                # Minimal layout — no AuthProvider/sidebar
+│   │   └── welcome/page.tsx          # Landing page (7 sections, SSR static)
 │   ├── (main)/                       # Main app (with sidebar)
 │   │   ├── layout.tsx                # Sidebar + Header layout
 │   │   ├── page.tsx                  # Dashboard/Home with stats
@@ -1254,6 +1258,58 @@ export interface ChiConfig {
 - sql.js persistence: singleton `getDatabase()` + `flushToDisk()` atomic write after every mutation
 - Single-user admin mode — no RLS, no auth, no role checks
 - ADRs: [ADR-001](ADR/ADR-001-sqlite-adapter.md), [ADR-002](ADR/ADR-002-desktop-db-decomposition.md), [ADR-003](ADR/ADR-003-media-export-format.md), [ADR-004](ADR/ADR-004-standalone-output-conditional.md)
+
+### 10.4 Landing Page — Public Route Group (v2.1)
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                    NEXT.JS APP ROUTER                             │
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │  Root Layout (layout.tsx)                                  │  │
+│  │  → Inter font, QueryProvider, AuthProvider, Toaster        │  │
+│  │                                                            │  │
+│  │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐  │  │
+│  │  │  (auth)/    │  │  (landing)/ │  │     (main)/      │  │  │
+│  │  │  login      │  │  welcome    │  │  sidebar + auth  │  │  │
+│  │  │  register   │  │  (public)   │  │  tree, people…   │  │  │
+│  │  │  forgot-pw  │  │             │  │  admin panel     │  │  │
+│  │  └─────────────┘  └──────────────┘  └──────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  Middleware: /welcome in publicPaths → no auth required          │
+│  URL: https://ancestortree.info/welcome                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Route Group: `(landing)/`**
+
+- `layout.tsx` — Minimal wrapper: `<div className="min-h-screen bg-background">{children}</div>`. No sidebar, no navigation chrome. Inherits root layout providers (known limitation — AuthProvider/QueryProvider loaded but unused; acceptable overhead, no functional impact).
+- `welcome/page.tsx` — Server Component (static content, no client-side data fetching). 7 sections: Hero, Features (8 cards), Screenshots, Download, Community, For Developers, Footer.
+- Middleware: `/welcome` added to `publicPaths` array. Authenticated users are NOT redirected away from `/welcome` (unlike `/login`, `/register`).
+
+**SEO & Meta:**
+
+| Item | Implementation |
+|------|----------------|
+| Canonical URL | `<link rel="canonical" href="https://ancestortree.info/welcome" />` via Next.js `metadata.alternates.canonical` |
+| Open Graph | `og:title`, `og:description`, `og:image` → `/og-landing.png` (1200×630) |
+| robots.txt | `public/robots.txt` — Allow all crawlers on `/welcome`, Disallow authenticated routes (`/people`, `/tree`, `/admin`, etc.) |
+| Sitemap | Single-page: only `/welcome` in `sitemap.xml` (optional, low priority) |
+
+**Download Links — State B (Pending):**
+
+Desktop build artifacts (.dmg, .exe) chưa có trên GitHub Releases tại thời điểm launch. Landing page hiển thị:
+
+- "Sắp có — theo dõi GitHub Releases" với link đến Releases page
+- Badge "Coming Soon" thay vì file size / version cụ thể
+- Khi artifacts có: cập nhật thành State A (direct download links)
+
+**Vercel Domain:**
+
+- Custom domain `ancestortree.info` → same Vercel deployment
+- Domain `ancestortree.info` purchased & configured on Vercel
+- Single `pnpm build`, single deployment — landing page + main app cùng origin
 
 ---
 

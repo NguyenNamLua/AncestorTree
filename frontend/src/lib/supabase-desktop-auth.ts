@@ -33,12 +33,18 @@ type AuthCallback = (event: string, session: typeof DESKTOP_SESSION | null) => v
 
 /** Subscriptions returned by onAuthStateChange */
 class DesktopSubscription {
+  private _unsub: () => void;
+  constructor(unsub: () => void = () => {}) {
+    this._unsub = unsub;
+  }
   unsubscribe() {
-    // no-op
+    this._unsub();
   }
 }
 
 export function createDesktopAuth() {
+  const listeners: Set<AuthCallback> = new Set();
+
   return {
     getSession() {
       return Promise.resolve({
@@ -55,6 +61,10 @@ export function createDesktopAuth() {
     },
 
     signInWithPassword(_credentials: { email: string; password: string }) {
+      // Fire SIGNED_IN so AuthProvider picks up the session
+      setTimeout(() => {
+        listeners.forEach((cb) => cb('SIGNED_IN', DESKTOP_SESSION));
+      }, 0);
       return Promise.resolve({
         data: { user: DESKTOP_USER, session: DESKTOP_SESSION },
         error: null,
@@ -62,6 +72,9 @@ export function createDesktopAuth() {
     },
 
     signUp(_credentials: { email: string; password: string; options?: { data?: Record<string, string> } }) {
+      setTimeout(() => {
+        listeners.forEach((cb) => cb('SIGNED_IN', DESKTOP_SESSION));
+      }, 0);
       return Promise.resolve({
         data: { user: DESKTOP_USER, session: DESKTOP_SESSION },
         error: null,
@@ -69,6 +82,11 @@ export function createDesktopAuth() {
     },
 
     signOut() {
+      // Fire SIGNED_OUT so AuthProvider clears user state (like real Supabase).
+      // User can log back in via /login — shim accepts any credentials.
+      setTimeout(() => {
+        listeners.forEach((cb) => cb('SIGNED_OUT', null));
+      }, 0);
       return Promise.resolve({ error: null });
     },
 
@@ -84,10 +102,13 @@ export function createDesktopAuth() {
     },
 
     onAuthStateChange(callback: AuthCallback) {
+      listeners.add(callback);
       // Fire callback async to match Supabase behavior
       setTimeout(() => callback('SIGNED_IN', DESKTOP_SESSION), 0);
       return {
-        data: { subscription: new DesktopSubscription() },
+        data: {
+          subscription: new DesktopSubscription(() => listeners.delete(callback)),
+        },
       };
     },
   };
