@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag (e.g. v1.8.0)'
+        description: 'Version tag (e.g. v2.1.0)'
         required: false
         default: ''
 
@@ -31,24 +31,31 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          cache-dependency-path: |
+            frontend/pnpm-lock.yaml
+            desktop/pnpm-lock.yaml
 
       - name: Install frontend dependencies
         run: cd frontend && pnpm install --frozen-lockfile
 
       - name: Build Next.js standalone (for Electron)
-        run: cd frontend && ELECTRON_BUILD=true pnpm build
+        run: cd frontend && pnpm build
+        env:
+          ELECTRON_BUILD: 'true'
+          NEXT_PUBLIC_DESKTOP_MODE: 'true'
 
       - name: Install desktop dependencies
-        run: cd desktop && npm ci
+        run: cd desktop && pnpm install --frozen-lockfile
 
       - name: Generate app icons
         run: cd desktop && node scripts/generate-icons.mjs
 
-      - name: Build Electron app (macOS)
-        run: cd desktop && npm run build:mac
+      - name: Build Electron + compile TypeScript
+        run: cd desktop && npx tsc
+
+      - name: Build macOS .dmg
+        run: cd desktop && npx electron-builder --mac
         env:
-          # Skip code signing for now (Phase 3.5: add Apple Developer cert)
           CSC_IDENTITY_AUTO_DISCOVERY: false
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -74,24 +81,30 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          cache-dependency-path: |
+            frontend/pnpm-lock.yaml
+            desktop/pnpm-lock.yaml
 
       - name: Install frontend dependencies
         run: cd frontend && pnpm install --frozen-lockfile
 
       - name: Build Next.js standalone (for Electron)
-        run: cd frontend && ELECTRON_BUILD=true pnpm build
+        run: cd frontend && pnpm build
         env:
           ELECTRON_BUILD: 'true'
+          NEXT_PUBLIC_DESKTOP_MODE: 'true'
 
       - name: Install desktop dependencies
-        run: cd desktop && npm ci
+        run: cd desktop && pnpm install --frozen-lockfile
 
-      - name: Generate app icons (Windows only needs icon.ico)
+      - name: Generate app icons
         run: cd desktop && node scripts/generate-icons.mjs
 
-      - name: Build Electron app (Windows)
-        run: cd desktop && npm run build:win
+      - name: Build Electron + compile TypeScript
+        run: cd desktop && npx tsc
+
+      - name: Build Windows .exe
+        run: cd desktop && npx electron-builder --win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -102,17 +115,15 @@ jobs:
           path: desktop/release/*.exe
           retention-days: 7
 
-  # ─── Create GitHub Release ──────────────────────────────────────────────────
+  # ─── Upload to existing GitHub Release ─────────────────────────────────────
   release:
-    name: Create GitHub Release
+    name: Upload to GitHub Release
     needs: [build-mac, build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
         with:
@@ -128,34 +139,9 @@ jobs:
       - name: List release files
         run: find dist/ -type f
 
-      - name: Create GitHub Release
+      - name: Upload assets to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Gia Phả Điện Tử ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-          body: |
-            ## Gia Phả Điện Tử ${{ github.ref_name }}
-
-            ### Tải xuống / Download
-
-            | Hệ điều hành | File | Ghi chú |
-            |-------------|------|---------|
-            | 🍎 macOS | `*.dmg` | Universal (Intel + Apple Silicon) |
-            | 🪟 Windows | `*.exe` | NSIS installer |
-
-            ### Hướng dẫn cài đặt
-
-            **macOS:** Mở file `.dmg` → kéo app vào Applications.
-            > ⚠️ Nếu thấy cảnh báo "ứng dụng từ nhà phát triển chưa được xác minh":
-            > System Settings → Privacy & Security → Allow anyway
-
-            **Windows:** Chạy file `.exe` → làm theo hướng dẫn.
-            > ⚠️ Windows SmartScreen có thể hiện cảnh báo → "More info" → "Run anyway"
-
-            ### Lưu ý bảo mật
-            Phiên bản này chưa được ký code (unsigned). Xem [hướng dẫn bypass Gatekeeper](https://support.apple.com/en-us/102445).
           files: |
             dist/mac/*.dmg
             dist/windows/*.exe
