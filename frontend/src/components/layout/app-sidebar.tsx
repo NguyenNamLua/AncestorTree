@@ -94,11 +94,11 @@ export function AppSidebar() {
       <SidebarHeader className="border-b px-4 py-4">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg">
-            Đ
+            N
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-sm">Họ Đặng</span>
-            <span className="text-xs text-muted-foreground">làng Kỷ Các</span>
+            <span className="font-semibold text-sm">Họ Nguyễn</span>
+            <span className="text-xs text-muted-foreground">làng Trần Xá</span>
           </div>
         </Link>
       </SidebarHeader>
